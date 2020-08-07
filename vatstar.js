@@ -24,7 +24,7 @@ client.on("message", async (message) => {
         `You didn't provide any arguments, ${message.author}`
       );
     }
-    message.channel.send(`Command name: ${command}\nArguments: ${args}`);
+    console.log(`Command name: ${command}\nArguments: ${args}`);
     try {
       const res = await axios
         .get(`https://api.vatsim.net/api/ratings/${args[0]}/`)
@@ -43,8 +43,8 @@ client.on("message", async (message) => {
             return message.channel.send(
               "I do not have permission to adjust nickname"
             );
-          message.channel.send(
-            `I have found your real name is ${full_name}\nI will adjust your nickname for you`
+          message.reply(
+            `Hello ${full_name}\nI will adjust your nickname for you`
           );
           message.member
             .setNickname(full_name)
@@ -54,11 +54,13 @@ client.on("message", async (message) => {
           let newRoles = roleSelector(message, pilotRating);
           console.log(newRoles);
           const member = message.mentions.members.first();
-          message.channel.send(`Hi ${member}`);
           message.member.roles.add(newRoles);
         });
     } catch (error) {
       console.log(error);
+      if (error.response.status === 404) {
+          message.reply(`VATSIM ID "${args[0]}" not found`);
+      }
     }
   }
 });
