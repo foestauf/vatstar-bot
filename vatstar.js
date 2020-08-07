@@ -36,10 +36,15 @@ client.on('message', async message => {
             message.channel.send(`I have found your real name is ${full_name}\nI will adjust your nickname for you`);
             message.member.setNickname(full_name)
             .then(res => {
-                console.log(res);
             }).catch((err) => console.log(err))
-                });
-            
+            // let nRole = client.guildMember.roles.cache.find(role => role.name === 'Cool Kids')
+            // console.log('Found role ' + nRole);
+            let newRole = message.member.guild.roles.cache.find(role => role.name === 'Cool Kids');
+            console.log(newRole);
+            const member = message.mentions.members.first();
+            message.channel.send(`Hi ${member}`)
+            message.member.roles.add(newRole);
+            })
     } catch (error) {
         console.log(error);
     }
