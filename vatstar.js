@@ -20,8 +20,8 @@ client.on("message", async (message) => {
   } else if (command === "vatstar") {
     console.log(`User ${message.member} is paging us`);
     if (!args.length) {
-      return message.channel.send(
-        `You didn't provide any arguments, ${message.author}`
+      return message.reply(
+        `Please respond in the format of "!vatstar 1234567" with your VATSIM ID`
       );
     }
     console.log(`Command name: ${command}\nArguments: ${args}`);
@@ -30,7 +30,6 @@ client.on("message", async (message) => {
         .get(`https://api.vatsim.net/api/ratings/${args[0]}/`)
         .then((data) => {
           response = data;
-          console.log(`Our data is ${response.data.id}`);
           const {
             id,
             rating,
@@ -39,57 +38,105 @@ client.on("message", async (message) => {
             name_last,
           } = response.data;
           let full_name = name_first + " " + name_last;
+          // Start await reactions here
+          message.react("👍").then(() => message.react("👎"));
+          const filter = (reaction, user) => {
+            return (
+              ["👍", "👎"].includes(reaction.emoji.name) &&
+              user.id === message.author.id
+            );
+          };
+          message.reply(
+            `I have found ${full_name}, is that right? Please react to your original message with either 👍 for yes or 👎 for no.`
+          );
+
+          message
+            .awaitReactions(filter, { max: 1, time: 60000, errors: ["time"] })
+            .then((collected) => {
+              const reaction = collected.first();
+
+              if (reaction.emoji.name === "👍") {
+                message.member
+                  .setNickname(full_name)
+                  .then((res) => {})
+                  .catch((err) => console.log(err));
+                message.reply("Great, I will adjust your nickname for you.");
+                console.log(`Pilot rating is ${pilotRating}`);
+                let newRoles = roleSelector(message, pilotRating);
+                if (rating > 0)
+                  newRoles.push(
+                    message.member.guild.roles.cache.find(
+                      (role) => role.name === "Controllers"
+                    )
+                  );
+                const member = message.mentions.members.first();
+                message.member.roles.add(newRoles);
+                let rolesString = newRoles.join();
+                if (rolesString.length > 0) {
+                  message.reply(
+                    `You have been assigned the following roles : ${rolesString}`
+                  );
+                } else {
+                  message.reply(`You currently have a pilot rating of 0`);
+                }
+              } else {
+                message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
+              }
+            })
+            .catch((collected) => {
+              message.reply(
+                "you reacted with neither a thumbs up, nor a thumbs down."
+              );
+            });
+          // END reaction await
+
           if (!message.guild.me.hasPermission("MANAGE_NICKNAMES"))
             return message.channel.send(
               "I do not have permission to adjust nickname"
             );
-          message.reply(
-            `Hello ${full_name}\nI will adjust your nickname for you`
-          );
-          message.member
-            .setNickname(full_name)
-            .then((res) => {})
-            .catch((err) => console.log(err));
-          console.log(`Pilot rating is ${pilotRating}`);
-          let newRoles = roleSelector(message, pilotRating);
-          console.log(newRoles);
-          const member = message.mentions.members.first();
-          message.member.roles.add(newRoles);
         });
     } catch (error) {
       console.log(error);
       if (error.response.status === 404) {
-          message.reply(`VATSIM ID "${args[0]}" not found`);
+        message.reply(`VATSIM ID "${args[0]}" not found`);
       }
     }
   }
 });
 
+function roleString(roles) {
+  console.log("roles list is" + roles);
+  console.log(roles.length);
+  if (roles.length === 0) return false;
+  else {
+    return true;
+  }
+}
+
 function roleSelector(message, rating) {
   let roles = [];
   console.log(`Rating in selector is :${rating}`);
   const roleSymbol = findRoles(message);
-  console.log(`Role symbol is :${roleSymbol.p1}`);
   switch (rating) {
     case 0:
       break;
     case 1:
-      roles = [roleSymbol.p1];
+      roles = [roleSymbol.p2];
       break;
     case 2:
-      roles = [roleSymbol.p1, roleSymbol.p2];
+      roles = [roleSymbol.p2, roleSymbol.p3];
       break;
     case 3:
-      roles = [roleSymbol.p1, roleSymbol.p2, roleSymbol.p3];
+      roles = [roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
       break;
     case 4:
-      roles = [roleSymbol.p1, roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
+      console.log("pilotrating of 4, now what do we do?");
+      // roles = [roleSymbol.p1, roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
       break;
     default:
       roles = [];
       break;
   }
-  console.log(`Roles is equal to ${roles}`);
   return roles;
 }
 
@@ -98,7 +145,6 @@ const findRoles = (message) => {
   let p2 = message.member.guild.roles.cache.find((role) => role.name === "P2");
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
-  console.log(`P1: ${p1} P2: ${p2} P3: ${p3} P4: ${p4}`);
   return { p1, p2, p3, p4 };
 };
 
