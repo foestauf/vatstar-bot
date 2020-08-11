@@ -44,26 +44,45 @@ client.on("message", async (message) => {
               "I do not have permission to adjust nickname"
             );
           message.reply(
-            `Hello ${full_name}\nI will adjust your nickname for you`
+            `Hello ${full_name}, I will adjust your nickname for you.`
           );
+          let nameWithCheck = full_name + " " + "✅";
           message.member
-            .setNickname(full_name)
+            .setNickname(nameWithCheck)
             .then((res) => {})
             .catch((err) => console.log(err));
           console.log(`Pilot rating is ${pilotRating}`);
           let newRoles = roleSelector(message, pilotRating);
-          console.log(newRoles);
           const member = message.mentions.members.first();
           message.member.roles.add(newRoles);
+          let rolesString = newRoles.join();
+          if (roleString(newRoles) === true) {
+                        message.reply(
+                          `You have been assigned the following roles : ${rolesString}`
+                        );
+
+          } else {
+                        message.reply(`You currently have a pilot rating of 0`);
+
+          }
         });
     } catch (error) {
       console.log(error);
       if (error.response.status === 404) {
-          message.reply(`VATSIM ID "${args[0]}" not found`);
+        message.reply(`VATSIM ID "${args[0]}" not found`);
       }
     }
   }
 });
+
+function roleString(roles) {
+  console.log('roles list is' + roles);
+  console.log(roles.length);
+  if (roles.length === 0) return false;
+  else {
+    return true;
+  }
+}
 
 function roleSelector(message, rating) {
   let roles = [];
