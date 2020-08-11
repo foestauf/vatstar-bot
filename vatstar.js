@@ -45,7 +45,7 @@ client.on("message", async (message) => {
           message.reply(
             `Hello ${full_name}, I will adjust your nickname for you.`
           );
-          let nameWithCheck = full_name + " " + "✅";
+          let nameWithCheck = full_name;
           message.member
             .setNickname(nameWithCheck)
             .then((res) => {})
