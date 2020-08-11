@@ -38,36 +38,62 @@ client.on("message", async (message) => {
             name_last,
           } = response.data;
           let full_name = name_first + " " + name_last;
+          // Start await reactions here
+          message.react("👍").then(() => message.react("👎"));
+          const filter = (reaction, user) => {
+            return (
+              ["👍", "👎"].includes(reaction.emoji.name) &&
+              user.id === message.author.id
+            );
+          };
+          message.reply(
+            `I have found ${full_name}, is that right? Please react to your original message with either 👍 for yes or 👎 for no.`
+          );
+
+          message
+            .awaitReactions(filter, { max: 1, time: 60000, errors: ["time"] })
+            .then((collected) => {
+              const reaction = collected.first();
+
+              if (reaction.emoji.name === "👍") {
+                message.member
+                  .setNickname(full_name)
+                  .then((res) => {})
+                  .catch((err) => console.log(err));
+                message.reply("Great, I will adjust your nickname for you.");
+                console.log(`Pilot rating is ${pilotRating}`);
+                let newRoles = roleSelector(message, pilotRating);
+                if (rating > 0)
+                  newRoles.push(
+                    message.member.guild.roles.cache.find(
+                      (role) => role.name === "Controllers"
+                    )
+                  );
+                const member = message.mentions.members.first();
+                message.member.roles.add(newRoles);
+                let rolesString = newRoles.join();
+                if (rolesString.length > 0) {
+                  message.reply(
+                    `You have been assigned the following roles : ${rolesString}`
+                  );
+                } else {
+                  message.reply(`You currently have a pilot rating of 0`);
+                }
+              } else {
+                message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
+              }
+            })
+            .catch((collected) => {
+              message.reply(
+                "you reacted with neither a thumbs up, nor a thumbs down."
+              );
+            });
+          // END reaction await
+
           if (!message.guild.me.hasPermission("MANAGE_NICKNAMES"))
             return message.channel.send(
               "I do not have permission to adjust nickname"
             );
-          message.reply(
-            `Hello ${full_name}, I will adjust your nickname for you.`
-          );
-          let nameWithCheck = full_name;
-          message.member
-            .setNickname(nameWithCheck)
-            .then((res) => {})
-            .catch((err) => console.log(err));
-          console.log(`Pilot rating is ${pilotRating}`);
-          let newRoles = roleSelector(message, pilotRating);
-          if (rating > 0)
-            newRoles.push(
-              message.member.guild.roles.cache.find(
-                (role) => role.name === "Controllers"
-              )
-            );
-          const member = message.mentions.members.first();
-          message.member.roles.add(newRoles);
-          let rolesString = newRoles.join();
-          if (rolesString.length > 0) {
-            message.reply(
-              `You have been assigned the following roles : ${rolesString}`
-            );
-          } else {
-            message.reply(`You currently have a pilot rating of 0`);
-          }
         });
     } catch (error) {
       console.log(error);
@@ -95,16 +121,17 @@ function roleSelector(message, rating) {
     case 0:
       break;
     case 1:
-      roles = [roleSymbol.p1];
+      roles = [roleSymbol.p2];
       break;
     case 2:
-      roles = [roleSymbol.p1, roleSymbol.p2];
+      roles = [roleSymbol.p2, roleSymbol.p3];
       break;
     case 3:
-      roles = [roleSymbol.p1, roleSymbol.p2, roleSymbol.p3];
+      roles = [roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
       break;
     case 4:
-      roles = [roleSymbol.p1, roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
+      console.log("pilotrating of 4, now what do we do?");
+      // roles = [roleSymbol.p1, roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
       break;
     default:
       roles = [];
