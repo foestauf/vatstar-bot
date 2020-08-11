@@ -20,8 +20,8 @@ client.on("message", async (message) => {
   } else if (command === "vatstar") {
     console.log(`User ${message.member} is paging us`);
     if (!args.length) {
-      return message.channel.send(
-        `You didn't provide any arguments, ${message.author}`
+      return message.reply(
+        `Please respond in the format of "!vatstar 1234567" with your VATSIM ID`
       );
     }
     console.log(`Command name: ${command}\nArguments: ${args}`);
@@ -30,7 +30,6 @@ client.on("message", async (message) => {
         .get(`https://api.vatsim.net/api/ratings/${args[0]}/`)
         .then((data) => {
           response = data;
-          console.log(`Our data is ${response.data.id}`);
           const {
             id,
             rating,
@@ -53,17 +52,21 @@ client.on("message", async (message) => {
             .catch((err) => console.log(err));
           console.log(`Pilot rating is ${pilotRating}`);
           let newRoles = roleSelector(message, pilotRating);
+          if (rating > 0)
+            newRoles.push(
+              message.member.guild.roles.cache.find(
+                (role) => role.name === "Controllers"
+              )
+            );
           const member = message.mentions.members.first();
           message.member.roles.add(newRoles);
           let rolesString = newRoles.join();
-          if (roleString(newRoles) === true) {
-                        message.reply(
-                          `You have been assigned the following roles : ${rolesString}`
-                        );
-
+          if (rolesString.length > 0) {
+            message.reply(
+              `You have been assigned the following roles : ${rolesString}`
+            );
           } else {
-                        message.reply(`You currently have a pilot rating of 0`);
-
+            message.reply(`You currently have a pilot rating of 0`);
           }
         });
     } catch (error) {
@@ -76,7 +79,7 @@ client.on("message", async (message) => {
 });
 
 function roleString(roles) {
-  console.log('roles list is' + roles);
+  console.log("roles list is" + roles);
   console.log(roles.length);
   if (roles.length === 0) return false;
   else {
@@ -88,7 +91,6 @@ function roleSelector(message, rating) {
   let roles = [];
   console.log(`Rating in selector is :${rating}`);
   const roleSymbol = findRoles(message);
-  console.log(`Role symbol is :${roleSymbol.p1}`);
   switch (rating) {
     case 0:
       break;
@@ -108,7 +110,6 @@ function roleSelector(message, rating) {
       roles = [];
       break;
   }
-  console.log(`Roles is equal to ${roles}`);
   return roles;
 }
 
@@ -117,7 +118,6 @@ const findRoles = (message) => {
   let p2 = message.member.guild.roles.cache.find((role) => role.name === "P2");
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
-  console.log(`P1: ${p1} P2: ${p2} P3: ${p3} P4: ${p4}`);
   return { p1, p2, p3, p4 };
 };
 
