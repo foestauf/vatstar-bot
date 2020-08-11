@@ -15,6 +15,21 @@ client.on("message", async (message) => {
   const command = args.shift().toLowerCase();
   let response = {};
 
+  if (command === "avengers_assemble") {
+    let count = 0;
+      let memberRole = message.member.guild.roles.cache.find(
+        (role) => role.name === "Member"
+      );
+      message.guild.members.cache.filter(m => !m.user.bot).forEach(member => {
+        member.roles.add(memberRole);
+        count += 1;
+      }
+        );
+        message.reply(`Operation complete. Assigned the member role to ${count}`)
+        
+
+  }
+
   if (message.content === "!ping") {
     message.reply("Pong!");
   } else if (command === "vatstar") {
@@ -80,7 +95,7 @@ client.on("message", async (message) => {
                   let studentRole = message.member.guild.roles.cache.find(
                     (role) => role.name === "Student"
                   );
-                  message.reply(`You currently do not have any pilot ratings.`);
+                  message.reply(`Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${studentRole}`);
                 }
               } else {
                 message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
