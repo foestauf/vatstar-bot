@@ -17,17 +17,21 @@ client.on("message", async (message) => {
 
   if (command === "avengers_assemble") {
     let count = 0;
-      let memberRole = message.member.guild.roles.cache.find(
-        (role) => role.name === "Member"
-      );
-      message.guild.members.cache.filter(m => !m.user.bot).forEach(member => {
-        member.roles.add(memberRole);
-        count += 1;
-      }
-        );
-        message.reply(`Operation complete. Assigned the member role to ${count}`)
-        
+    let memberRole = message.member.guild.roles.cache.find(
+      (role) => role.name === "Member"
+    );
+    message.guild.members.cache
+      .filter((m) => !m.user.bot)
+      .forEach( (member) => {
+         member.roles.add(memberRole);
+        console.log(`Given role to ${member.user.username}`)
+        count ++;
+      })
+        message.reply(
+          `Operation complete. Assigned the member role to ${count}`
+        )
 
+    return;
   }
 
   if (message.content === "!ping") {
@@ -95,10 +99,14 @@ client.on("message", async (message) => {
                   let studentRole = message.member.guild.roles.cache.find(
                     (role) => role.name === "Student"
                   );
-                  message.reply(`Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${studentRole}`);
+                  message.reply(
+                    `Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${studentRole}`
+                  );
                 }
               } else {
-                message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
+                message.reply(
+                  "Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance"
+                );
               }
             })
             .catch((collected) => {
@@ -136,21 +144,21 @@ function roleSelector(message, rating) {
   console.log(`Rating in selector is :${rating}`);
   const roleSymbol = findRoles(message);
   if ((rating & 16) === 16) {
-    roles.push(roleSymbol.p5)
+    roles.push(roleSymbol.p5);
   }
-   if ((rating & 8) === 8) {
-    roles.push(roleSymbol.p4)
-  } 
-   if ((rating & 4) === 4) {
+  if ((rating & 8) === 8) {
+    roles.push(roleSymbol.p4);
+  }
+  if ((rating & 4) === 4) {
     roles.push(roleSymbol.p3);
   }
-   if ((rating & 2) === 2) {
+  if ((rating & 2) === 2) {
     roles.push(roleSymbol.p2);
-  } 
+  }
   if ((rating & 1) === 1) {
     roles.push(roleSymbol.p1);
-  } 
-  
+  }
+
   return roles;
 }
 
