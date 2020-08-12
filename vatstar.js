@@ -15,6 +15,21 @@ client.on("message", async (message) => {
   const command = args.shift().toLowerCase();
   let response = {};
 
+  if (command === "avengers_assemble") {
+    let count = 0;
+      let memberRole = message.member.guild.roles.cache.find(
+        (role) => role.name === "Member"
+      );
+      message.guild.members.cache.filter(m => !m.user.bot).forEach(member => {
+        member.roles.add(memberRole);
+        count += 1;
+      }
+        );
+        message.reply(`Operation complete. Assigned the member role to ${count}`)
+        
+
+  }
+
   if (message.content === "!ping") {
     message.reply("Pong!");
   } else if (command === "vatstar") {
@@ -63,7 +78,7 @@ client.on("message", async (message) => {
                 message.reply("Great, I will adjust your nickname for you.");
                 console.log(`Pilot rating is ${pilotRating}`);
                 let newRoles = roleSelector(message, pilotRating);
-                if (rating > 0)
+                if (rating > 1)
                   newRoles.push(
                     message.member.guild.roles.cache.find(
                       (role) => role.name === "Controllers"
@@ -77,7 +92,10 @@ client.on("message", async (message) => {
                     `You have been assigned the following roles : ${rolesString}`
                   );
                 } else {
-                  message.reply(`You currently have a pilot rating of 0`);
+                  let studentRole = message.member.guild.roles.cache.find(
+                    (role) => role.name === "Student"
+                  );
+                  message.reply(`Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${studentRole}`);
                 }
               } else {
                 message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
@@ -117,26 +135,22 @@ function roleSelector(message, rating) {
   let roles = [];
   console.log(`Rating in selector is :${rating}`);
   const roleSymbol = findRoles(message);
-  switch (rating) {
-    case 0:
-      break;
-    case 1:
-      roles = [roleSymbol.p2];
-      break;
-    case 2:
-      roles = [roleSymbol.p2, roleSymbol.p3];
-      break;
-    case 3:
-      roles = [roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
-      break;
-    case 4:
-      console.log("pilotrating of 4, now what do we do?");
-      // roles = [roleSymbol.p1, roleSymbol.p2, roleSymbol.p3, roleSymbol.p4];
-      break;
-    default:
-      roles = [];
-      break;
+  if ((rating & 16) === 16) {
+    roles.push(roleSymbol.p5)
   }
+   if ((rating & 8) === 8) {
+    roles.push(roleSymbol.p4)
+  } 
+   if ((rating & 4) === 4) {
+    roles.push(roleSymbol.p3);
+  }
+   if ((rating & 2) === 2) {
+    roles.push(roleSymbol.p2);
+  } 
+  if ((rating & 1) === 1) {
+    roles.push(roleSymbol.p1);
+  } 
+  
   return roles;
 }
 
@@ -145,7 +159,8 @@ const findRoles = (message) => {
   let p2 = message.member.guild.roles.cache.find((role) => role.name === "P2");
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
-  return { p1, p2, p3, p4 };
+  let p5 = message.member.guild.roles.cache.find((role) => role.name === "P5");
+  return { p1, p2, p3, p4, p5 };
 };
 
 client.login(token);
