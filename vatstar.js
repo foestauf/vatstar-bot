@@ -16,22 +16,27 @@ client.on("message", async (message) => {
   let response = {};
 
   if (command === "avengers_assemble") {
-    let count = 0;
     let memberRole = message.member.guild.roles.cache.find(
       (role) => role.name === "Member"
     );
-    message.guild.members.cache
-      .filter((m) => !m.user.bot)
-      .forEach( (member) => {
-         member.roles.add(memberRole);
-        console.log(`Given role to ${member.user.username}`)
-        count ++;
-      })
+    const roleApply = async () => {
+      let count = 0;
+      message.guild.members.cache
+        .filter((m) => !m.user.bot)
+        .forEach((member) => {
+          member.roles.add(memberRole);
+          console.log(`Given role to ${member.user.username}`);
+          count++;
+        });
+        return count;
+      }
+      roleApply().then((result) => {
+        console.log(result);
         message.reply(
-          `Operation complete. Assigned the member role to ${count}`
-        )
-
-    return;
+          `Operation complete. Assigned the member role to ${result} members`
+        );
+      });
+      return;
   }
 
   if (message.content === "!ping") {
