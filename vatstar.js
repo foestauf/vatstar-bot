@@ -95,18 +95,10 @@ client.on("message", async (message) => {
             const member = message.mentions.members.first();
             message.member.roles.add(newRoles.roles);
             let rolesString = newRoles.roleNames.join();
-            if (rolesString.length > 0) {
-              message.reply(
-                `You have been assigned the following roles : ${rolesString}`
-              );
-            } else {
-              let memberRole = message.member.guild.roles.cache.find(
-                (role) => role.name === "Member"
-              );
-              message.reply(
-                `Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${memberRole.name}`
-              );
-            }
+            message.reply(
+              `You have been assigned the following roles : ${rolesString}`
+            );
+
             // } else {
             //   message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
             // }
@@ -164,6 +156,9 @@ function roleSelector(message, pilotRating, rating) {
     roleNames.push(roleSymbol.controller.name);
   }
 
+  roles.push(roleSymbol.memberRole);
+  roleNames.push(roleSymbol.memberRole.name);
+
   return { roles, roleNames };
 }
 
@@ -173,9 +168,14 @@ const findRoles = (message) => {
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
   let p5 = message.member.guild.roles.cache.find((role) => role.name === "P5");
-  let controller = message.member.guild.roles.cache.find((role) => role.name === "Controllers");
+  let controller = message.member.guild.roles.cache.find(
+    (role) => role.name === "Controllers"
+  );
+  let memberRole = message.member.guild.roles.cache.find(
+    (role) => role.name === "Member"
+  );
 
-  return { p1, p2, p3, p4, p5, controller };
+  return { p1, p2, p3, p4, p5, controller, memberRole };
 };
 
 client.login(token);
