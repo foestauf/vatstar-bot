@@ -28,15 +28,17 @@ client.on("message", async (message) => {
           console.log(`Given role to ${member.user.username}`);
           count++;
         });
-        return count;
-      }
-      roleApply().then((result) => {
-        console.log(result);
-        message.reply(
-          `Operation complete. Assigned the member role to ${result} members`
-        );
-      });
-      return;
+      return count;
+    };
+    roleApply().then((result) => {
+      console.log(
+        `Operation complete. Assigned the member role to ${result} members`
+      );
+      message.reply(
+        `Operation complete. Assigned the member role to ${result} members`
+      );
+    });
+    return;
   }
 
   if (message.content === "!ping") {
@@ -101,16 +103,17 @@ client.on("message", async (message) => {
                     `You have been assigned the following roles : ${rolesString}`
                   );
                 } else {
-                  let studentRole = message.member.guild.roles.cache.find(
-                    (role) => role.name === "Student"
+                  let memberRole = message.member.guild.roles.cache.find(
+                    (role) => role.name === "Member"
                   );
                   message.reply(
-                    `Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${studentRole}`
+                    `Welcome to VATSTAR. As you currently do not have any pilot ratings you will be considered a student pilot and have
+                     automatically been given the role of ${memberRole}`
                   );
                 }
               } else {
                 message.reply(
-                  "Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance"
+                  "Okay we got that wrong, please check your vatsim ID number and try again or contact staff for further assistance"
                 );
               }
             })
