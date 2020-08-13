@@ -29,15 +29,15 @@ client.on("message", async (message) => {
           member.roles.add(memberRole);
           count += 1;
         });
-      message.reply(`Operation complete. Assigned the member role to ${count}`);
+      message.channel.send(`Operation complete. Assigned the member role to ${count}`);
     }
 
     if (message.content === "!ping") {
-      message.reply("Pong!");
+      message.channel.send("Pong!");
     } else if (command === "vatstar") {
       console.log(`User ${message.member} is paging us`);
       if (!args.length) {
-        return message.reply(
+        return message.channel.send(
           `Please respond in the format of "!vatstar 1234567" with your VATSIM ID`
         );
       }
@@ -78,10 +78,8 @@ client.on("message", async (message) => {
             //     const reaction = collected.first();
 
             //     if (reaction.emoji.name === "👍") {
-            if (!message.member.nickname === full_name) {
-              console.log(message.member.nickname);
-              console.log(full_name);
-              message.reply(
+            if (message.member.displayName !== full_name) {
+              message.channel.send(
                 `Hello ${full_name}, I will adjust your nickname for you.`
               );
 
@@ -91,7 +89,6 @@ client.on("message", async (message) => {
                 .catch((err) => console.log(err));
             }
 
-            console.log(`Pilot rating is ${pilotRating}`);
             let newRoles = roleSelector(message, pilotRating);
             if (rating > 1)
               newRoles.push(
@@ -103,15 +100,15 @@ client.on("message", async (message) => {
             message.member.roles.add(newRoles);
             let rolesString = newRoles.join();
             if (rolesString.length > 0) {
-              message.reply(
+              message.channel.send(
                 `You have been assigned the following roles : ${rolesString}`
               );
             } else {
               let memberRole = message.member.guild.roles.cache.find(
                 (role) => role.name === "Member"
               );
-              message.reply(
-                `Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${memberRole}`
+              message.channel.send(
+                `Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${memberRole.name}`
               );
             }
             // } else {
@@ -128,7 +125,7 @@ client.on("message", async (message) => {
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
-          message.reply(`VATSIM ID "${args[0]}" not found`);
+          message.channel.send(`VATSIM ID "${args[0]}" not found`);
         }
       }
     }
@@ -141,6 +138,9 @@ function roleString(roles) {
     return true;
   }
 }
+
+
+
 
 function roleSelector(message, rating) {
   let roles = [];
