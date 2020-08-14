@@ -27,7 +27,9 @@ client.on("message", async (message) => {
           member.roles.add(memberRole);
           count += 1;
         });
-      message.channel.send(`Operation complete. Assigned the member role to ${count}`);
+      message.channel.send(
+        `Operation complete. Assigned the member role to ${count}`
+      );
     }
 
     if (message.content === "!ping") {
@@ -35,7 +37,7 @@ client.on("message", async (message) => {
     } else if (command === "vatstar") {
       console.log(`User ${message.member} is paging us`);
       if (!args.length) {
-        return message.channel.send(
+        return message.reply(
           `Please respond in the format of "!vatstar 1234567" with your VATSIM ID`
         );
       }
@@ -77,7 +79,7 @@ client.on("message", async (message) => {
 
             //     if (reaction.emoji.name === "👍") {
             if (message.member.displayName !== full_name) {
-              message.channel.send(
+              message.reply(
                 `Hello ${full_name}, I will adjust your nickname for you.`
               );
 
@@ -87,28 +89,14 @@ client.on("message", async (message) => {
                 .catch((err) => console.log(err));
             }
 
-            let newRoles = roleSelector(message, pilotRating);
-            if (rating > 1)
-              newRoles.push(
-                message.member.guild.roles.cache.find(
-                  (role) => role.name === "Controllers"
-                )
-              );
+            let newRoles = roleSelector(message, pilotRating, rating);
             const member = message.mentions.members.first();
-            message.member.roles.add(newRoles);
-            let rolesString = newRoles.join();
-            if (rolesString.length > 0) {
-              message.channel.send(
-                `You have been assigned the following roles : ${rolesString}`
-              );
-            } else {
-              let memberRole = message.member.guild.roles.cache.find(
-                (role) => role.name === "Member"
-              );
-              message.channel.send(
-                `Welcome to VATSTAR. As you currently do not have any pilot ratings you have automatically been given the role of ${memberRole.name}`
-              );
-            }
+            message.member.roles.add(newRoles.roles);
+            let rolesString = newRoles.roleNames.join();
+            message.reply(
+              `You have been assigned the following roles : ${rolesString}`
+            );
+
             // } else {
             //   message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
             // }
@@ -137,29 +125,39 @@ function roleString(roles) {
   }
 }
 
-
-
-
-function roleSelector(message, rating) {
+function roleSelector(message, pilotRating, rating) {
   let roles = [];
+  let roleNames = [];
   const roleSymbol = findRoles(message);
-  if ((rating & 16) === 16) {
+  if ((pilotRating & 16) === 16) {
     roles.push(roleSymbol.p5);
+    roleNames.push(roleSymbol.p5.name);
   }
-  if ((rating & 8) === 8) {
+  if ((pilotRating & 8) === 8) {
     roles.push(roleSymbol.p4);
+    roleNames.push(roleSymbol.p4.name);
   }
-  if ((rating & 4) === 4) {
+  if ((pilotRating & 4) === 4) {
     roles.push(roleSymbol.p3);
+    roleNames.push(roleSymbol.p3.name);
   }
-  if ((rating & 2) === 2) {
+  if ((pilotRating & 2) === 2) {
     roles.push(roleSymbol.p2);
+    roleNames.push(roleSymbol.p2.name);
   }
-  if ((rating & 1) === 1) {
+  if ((pilotRating & 1) === 1) {
     roles.push(roleSymbol.p1);
+    roleNames.push(roleSymbol.p1.name);
+  }
+  if (rating > 1) {
+    roles.push(roleSymbol.controller);
+    roleNames.push(roleSymbol.controller.name);
   }
 
-  return roles;
+  roles.push(roleSymbol.memberRole);
+  roleNames.push(roleSymbol.memberRole.name);
+
+  return { roles, roleNames };
 }
 
 const findRoles = (message) => {
@@ -168,7 +166,14 @@ const findRoles = (message) => {
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
   let p5 = message.member.guild.roles.cache.find((role) => role.name === "P5");
-  return { p1, p2, p3, p4, p5 };
+  let controller = message.member.guild.roles.cache.find(
+    (role) => role.name === "Controllers"
+  );
+  let memberRole = message.member.guild.roles.cache.find(
+    (role) => role.name === "Member"
+  );
+
+  return { p1, p2, p3, p4, p5, controller, memberRole };
 };
 
 client.login(token);
