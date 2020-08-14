@@ -17,8 +17,6 @@ client.on("message", async (message) => {
     let response = {};
 
     if (command === "avengers_assemble") {
-      console.log(botChannel);
-
       let count = 0;
       let memberRole = message.member.guild.roles.cache.find(
         (role) => role.name === "Member"
