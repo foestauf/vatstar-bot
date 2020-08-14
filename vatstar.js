@@ -92,7 +92,7 @@ client.on("message", async (message) => {
             let newRoles = roleSelector(message, pilotRating, rating);
             const member = message.mentions.members.first();
             message.member.roles.add(newRoles.roles);
-            let rolesString = newRoles.roleNames.join();
+            let rolesString = newRoles.roleNames.join(", ");
             message.reply(
               `You have been assigned the following roles : ${rolesString}`
             );
