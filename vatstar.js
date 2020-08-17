@@ -173,7 +173,7 @@ const findRoles = (message) => {
     (role) => role.name === "Member"
   );
 
-  return { p1, p2, p3, p4, p5, controller, memberRole };
+  return { p1, p2, p3, p4, p0, controller, memberRole };
 };
 
 client.login(token);
