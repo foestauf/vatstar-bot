@@ -139,7 +139,7 @@ function roleSelector(message, pilotRating, rating) {
   }
   if (pilotRating >= 2) {
     roles.push(roleSymbol.p2);
-    roleNames.push(roleSymbol.p3.name);
+    roleNames.push(roleSymbol.p2.name);
   }
   if (pilotRating >= 3) {
     roles.push(roleSymbol.p3);
