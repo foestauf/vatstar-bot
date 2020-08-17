@@ -38,7 +38,7 @@ client.on("message", async (message) => {
       console.log(`User ${message.member} is paging us`);
       if (!args.length) {
         return message.reply(
-          `Please respond in the format of "!vatstar 1234567" with your VATSIM ID`
+          `Please respond in the format of "!vatstar 1234567" with your VATSIM CID`
         );
       }
       console.log(`Command name: ${command}\nArguments: ${args}`);
@@ -111,7 +111,7 @@ client.on("message", async (message) => {
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
-          message.channel.send(`VATSIM ID "${args[0]}" not found`);
+          message.channel.send(`VATSIM CID "${args[0]}" not found`);
         }
       }
     }
@@ -129,25 +129,25 @@ function roleSelector(message, pilotRating, rating) {
   let roles = [];
   let roleNames = [];
   const roleSymbol = findRoles(message);
-  if ((pilotRating & 16) === 16) {
-    roles.push(roleSymbol.p5);
+  if (pilotRating === 0) {
+    roles.push(roleSymbol.p0);
     roleNames.push(roleSymbol.p5.name);
   }
-  if ((pilotRating & 8) === 8) {
-    roles.push(roleSymbol.p4);
-    roleNames.push(roleSymbol.p4.name);
+  if (pilotRating >= 1) {
+    roles.push(roleSymbol.p1);
+    roleNames.push(roleSymbol.p1.name);
   }
-  if ((pilotRating & 4) === 4) {
+  if (pilotRating >= 2) {
+    roles.push(roleSymbol.p2);
+    roleNames.push(roleSymbol.p3.name);
+  }
+  if (pilotRating >= 3) {
     roles.push(roleSymbol.p3);
     roleNames.push(roleSymbol.p3.name);
   }
-  if ((pilotRating & 2) === 2) {
-    roles.push(roleSymbol.p2);
-    roleNames.push(roleSymbol.p2.name);
-  }
-  if ((pilotRating & 1) === 1) {
-    roles.push(roleSymbol.p1);
-    roleNames.push(roleSymbol.p1.name);
+  if (pilotRating >= 4) {
+    roles.push(roleSymbol.p4);
+    roleNames.push(roleSymbol.p4.name);
   }
   if (rating > 1) {
     roles.push(roleSymbol.controller);
@@ -161,11 +161,11 @@ function roleSelector(message, pilotRating, rating) {
 }
 
 const findRoles = (message) => {
+  let p0 = message.member.guild.roles.cache.find((role) => role.name === "P0");
   let p1 = message.member.guild.roles.cache.find((role) => role.name === "P1");
   let p2 = message.member.guild.roles.cache.find((role) => role.name === "P2");
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
-  let p5 = message.member.guild.roles.cache.find((role) => role.name === "P5");
   let controller = message.member.guild.roles.cache.find(
     (role) => role.name === "Controllers"
   );
