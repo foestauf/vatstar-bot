@@ -167,7 +167,7 @@ const findRoles = (message) => {
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
   let controller = message.member.guild.roles.cache.find(
-    (role) => role.name === "Controllers"
+    (role) => role.name === "Controller"
   );
   let memberRole = message.member.guild.roles.cache.find(
     (role) => role.name === "Member"
