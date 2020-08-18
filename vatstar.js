@@ -129,7 +129,7 @@ function roleSelector(message, pilotRating, rating) {
   let roles = [];
   let roleNames = [];
   const roleSymbol = findRoles(message);
-  if (pilotRating === 0) {
+  if (pilotRating >= 0) {
     roles.push(roleSymbol.p0);
     roleNames.push(roleSymbol.p0.name);
   }
