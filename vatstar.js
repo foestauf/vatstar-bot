@@ -109,9 +109,10 @@ client.on("message", async (message) => {
             // END reaction await
           });
       } catch (error) {
-        console.log(error);
         if (error.response.status === 404) {
           message.channel.send(`VATSIM CID "${args[0]}" not found`);
+        } else {
+                  console.log(error);
         }
       }
     }
