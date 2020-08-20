@@ -16,21 +16,21 @@ client.on("message", async (message) => {
     const command = args.shift().toLowerCase();
     let response = {};
 
-    if (command === "avengers_assemble") {
-      let count = 0;
-      let memberRole = message.member.guild.roles.cache.find(
-        (role) => role.name === "Member"
-      );
-      message.guild.members.cache
-        .filter((m) => !m.user.bot)
-        .forEach((member) => {
-          member.roles.add(memberRole);
-          count += 1;
-        });
-      message.channel.send(
-        `Operation complete. Assigned the member role to ${count}`
-      );
-    }
+    // if (command === "avengers_assemble") {
+    //   let count = 0;
+    //   let memberRole = message.member.guild.roles.cache.find(
+    //     (role) => role.name === "Member"
+    //   );
+    //   message.guild.members.cache
+    //     .filter((m) => !m.user.bot)
+    //     .forEach((member) => {
+    //       member.roles.add(memberRole);
+    //       count += 1;
+    //     });
+    //   message.channel.send(
+    //     `Operation complete. Assigned the member role to ${count}`
+    //   );
+    // }
 
     if (message.content === "!ping") {
       message.channel.send("Pong!");
