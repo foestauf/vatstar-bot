@@ -1,15 +1,21 @@
-const Discord = require("discord.js");
-const client = new Discord.Client();
+require("dotenv").config();
+import { Client, Message, Channel } from "discord.js";
 
+import Discord = require("discord.js");
+const client = new Discord.Client();
 const axios = require("axios").default;
 
-const { prefix, token, channelId } = require("./config.json");
+const { prefix, channelId } = require("./config.json");
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on("message", async (message) => {
+interface channelName extends Discord.DMChannel {
+  name: string;
+}
+
+client.on("message", async (message: Message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   if (message.channel.name === channelId) {
     const args = message.content.slice(prefix.length).trim().split(" ");
@@ -19,11 +25,11 @@ client.on("message", async (message) => {
     // if (command === "avengers_assemble") {
     //   let count = 0;
     //   let memberRole = message.member.guild.roles.cache.find(
-    //     (role) => role.name === "Member"
+    //     (role: { name: string; }) => role.name === "Member"
     //   );
     //   message.guild.members.cache
-    //     .filter((m) => !m.user.bot)
-    //     .forEach((member) => {
+    //     .filter((m: { user: { bot: any; }; }) => !m.user.bot)
+    //     .forEach((member: { roles: { add: (arg0: any) => void; }; }) => {
     //       member.roles.add(memberRole);
     //       count += 1;
     //     });
@@ -38,15 +44,15 @@ client.on("message", async (message) => {
       console.log(`User ${message.member} is paging us`);
       if (!args.length) {
         return message.reply(
-          `Please respond in the format of "!vatstar 1234567" with your VATSIM CID`
+          `Please respond in the format of "!vatstar 1234567" with your VATSIM ID`
         );
       }
       console.log(`Command name: ${command}\nArguments: ${args}`);
       try {
         const res = await axios
           .get(`https://api.vatsim.net/api/ratings/${args[0]}/`)
-          .then((data) => {
-            response = data;
+          .then((data: object) => {
+            const response: any = data;
             const {
               id,
               rating,
@@ -78,24 +84,25 @@ client.on("message", async (message) => {
             //     const reaction = collected.first();
 
             //     if (reaction.emoji.name === "👍") {
+            let nameReply;
             if (message.member.displayName !== full_name) {
-              message.reply(
-                `Hello ${full_name}, I will adjust your nickname for you.`
-              );
+              nameReply = `Hello ${full_name}, I will adjust your nickname`;
 
               message.member
                 .setNickname(full_name)
-                .then((res) => {})
-                .catch((err) => console.log(err));
+                .then((res: any) => {})
+                .catch((err: any) => console.log(err));
             }
 
             let newRoles = roleSelector(message, pilotRating, rating);
             const member = message.mentions.members.first();
             message.member.roles.add(newRoles.roles);
             let rolesString = newRoles.roleNames.join(", ");
-            message.reply(
-              `You have been assigned the following roles : ${rolesString}`
-            );
+            const roleString = `You have been assigned the following roles : ${rolesString}`;
+            const replyMessage = [nameReply, roleString]
+              .filter(Boolean)
+              .join(". ");
+            message.reply(replyMessage);
 
             // } else {
             //   message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
@@ -110,7 +117,7 @@ client.on("message", async (message) => {
           });
       } catch (error) {
         if (error.response.status === 404) {
-          message.channel.send(`VATSIM CID "${args[0]}" not found`);
+          message.channel.send(`VATSIM ID "${args[0]}" not found`);
         } else {
           console.log(error);
         }
@@ -119,14 +126,14 @@ client.on("message", async (message) => {
   }
 });
 
-function roleString(roles) {
+function roleString(roles: string | any[]) {
   if (roles.length === 0) return false;
   else {
     return true;
   }
 }
 
-function roleSelector(message, pilotRating, rating) {
+function roleSelector(message: Message, pilotRating: number, rating: number) {
   let roles = [];
   let roleNames = [];
   const roleSymbol = findRoles(message);
@@ -181,20 +188,20 @@ function roleSelector(message, pilotRating, rating) {
   return { roles, roleNames };
 }
 
-const findRoles = (message) => {
+const findRoles = (message: any) => {
   let p0 = message.member.guild.roles.cache.find((role) => role.name === "P0");
   let p1 = message.member.guild.roles.cache.find((role) => role.name === "P1");
   let p2 = message.member.guild.roles.cache.find((role) => role.name === "P2");
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
   let controller = message.member.guild.roles.cache.find(
-    (role) => role.name === "Controller"
+    (role: { name: string }) => role.name === "Controllers"
   );
   let memberRole = message.member.guild.roles.cache.find(
-    (role) => role.name === "Member"
+    (role: { name: string }) => role.name === "Member"
   );
 
-  return { p1, p2, p3, p4, p0, controller, memberRole };
+  return { p0, p1, p2, p3, p4, controller, memberRole };
 };
 
-client.login(token);
+client.login(process.env.TOKEN);
