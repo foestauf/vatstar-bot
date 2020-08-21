@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-require('dotenv').config();
+require("dotenv").config();
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const axios = require("axios").default;
@@ -46,7 +46,9 @@ client.on("message", async (message) => {
                     message.member.roles.add(newRoles.roles);
                     let rolesString = newRoles.roleNames.join(", ");
                     const roleString = `You have been assigned the following roles : ${rolesString}`;
-                    const replyMessage = [nameReply, roleString].filter(Boolean).join(". ");
+                    const replyMessage = [nameReply, roleString]
+                        .filter(Boolean)
+                        .join(". ");
                     message.reply(replyMessage);
                 });
             }

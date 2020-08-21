@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 import { Client, Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
@@ -52,7 +52,7 @@ client.on("message", async (message: Message) => {
         const res = await axios
           .get(`https://api.vatsim.net/api/ratings/${args[0]}/`)
           .then((data: object) => {
-            const response: any  = data;
+            const response: any = data;
             const {
               id,
               rating,
@@ -84,7 +84,7 @@ client.on("message", async (message: Message) => {
             //     const reaction = collected.first();
 
             //     if (reaction.emoji.name === "👍") {
-              let nameReply;
+            let nameReply;
             if (message.member.displayName !== full_name) {
               nameReply = `Hello ${full_name}, I will adjust your nickname`;
 
@@ -99,10 +99,10 @@ client.on("message", async (message: Message) => {
             message.member.roles.add(newRoles.roles);
             let rolesString = newRoles.roleNames.join(", ");
             const roleString = `You have been assigned the following roles : ${rolesString}`;
-            const replyMessage = [nameReply, roleString].filter(Boolean).join(". ");
-            message.reply(
-              replyMessage
-            );
+            const replyMessage = [nameReply, roleString]
+              .filter(Boolean)
+              .join(". ");
+            message.reply(replyMessage);
 
             // } else {
             //   message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
@@ -119,8 +119,7 @@ client.on("message", async (message: Message) => {
         if (error.response.status === 404) {
           message.channel.send(`VATSIM ID "${args[0]}" not found`);
         } else {
-                  console.log(error);
-
+          console.log(error);
         }
       }
     }
@@ -196,10 +195,10 @@ const findRoles = (message: any) => {
   let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
   let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
   let controller = message.member.guild.roles.cache.find(
-    (role: { name: string; }) => role.name === "Controllers"
+    (role: { name: string }) => role.name === "Controllers"
   );
   let memberRole = message.member.guild.roles.cache.find(
-    (role: { name: string; }) => role.name === "Member"
+    (role: { name: string }) => role.name === "Member"
   );
 
   return { p0, p1, p2, p3, p4, controller, memberRole };
