@@ -17,6 +17,7 @@ interface channelName extends Discord.DMChannel {
 
 client.on("message", async (message: Message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
+  // @ts-expect-error
   if (message.channel.name === channelId) {
     const args = message.content.slice(prefix.length).trim().split(" ");
     const command = args.shift().toLowerCase();
