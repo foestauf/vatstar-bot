@@ -45,7 +45,7 @@ client.on("message", async (message) => {
                     const member = message.mentions.members.first();
                     message.member.roles.add(newRoles.roles);
                     let rolesString = newRoles.roleNames.join(", ");
-                    const roleString = `You have been assigned the following roles : ${rolesString}`;
+                    const roleString = `You have been assigned the following roles: ${rolesString}`;
                     const replyMessage = [nameReply, roleString]
                         .filter(Boolean)
                         .join(". ");
@@ -53,11 +53,13 @@ client.on("message", async (message) => {
                 });
             }
             catch (error) {
+                console.log(error);
                 if (error.response.status === 404) {
                     message.channel.send(`VATSIM ID "${args[0]}" not found`);
                 }
                 else {
                     console.log(error);
+                    message.reply('An unknown error has occured please contact @Foestauf#4056');
                 }
             }
         }
