@@ -92,7 +92,14 @@ client.on("message", async (message: Message) => {
               message.member
                 .setNickname(full_name)
                 .then((res: any) => {})
-                .catch((err: any) => console.log(err));
+                .catch((err: any) => {
+                  if (err.httpStatus === 403)
+                  {
+                    message.reply('I do not have permission to adjust your nickname');
+                  }
+                  console.log(`Unable to adjust nickname for ${full_name}`)
+                })
+                ;
             }
 
             let newRoles = roleSelector(message, pilotRating, rating);
@@ -192,13 +199,13 @@ function roleSelector(message: Message, pilotRating: number, rating: number) {
 }
 
 const findRoles = (message: any) => {
-  let p0 = message.member.guild.roles.cache.find((role) => role.name === "P0");
-  let p1 = message.member.guild.roles.cache.find((role) => role.name === "P1");
-  let p2 = message.member.guild.roles.cache.find((role) => role.name === "P2");
-  let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
-  let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
+  let p0 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P0");
+  let p1 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P1");
+  let p2 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P2");
+  let p3 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P3");
+  let p4 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P4");
   let controller = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "Controllers"
+    (role: { name: string }) => role.name === "Controller"
   );
   let memberRole = message.member.guild.roles.cache.find(
     (role: { name: string }) => role.name === "Member"
@@ -206,5 +213,4 @@ const findRoles = (message: any) => {
 
   return { p0, p1, p2, p3, p4, controller, memberRole };
 };
-
 client.login(process.env.TOKEN);

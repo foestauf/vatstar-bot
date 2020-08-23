@@ -39,7 +39,12 @@ client.on("message", async (message) => {
                         message.member
                             .setNickname(full_name)
                             .then((res) => { })
-                            .catch((err) => console.log(err));
+                            .catch((err) => {
+                            if (err.httpStatus === 403) {
+                                message.reply('I do not have permission to adjust your nickname');
+                            }
+                            console.log(`Unable to adjust nickname for ${full_name}`);
+                        });
                     }
                     let newRoles = roleSelector(message, pilotRating, rating);
                     const member = message.mentions.members.first();
@@ -130,7 +135,7 @@ const findRoles = (message) => {
     let p2 = message.member.guild.roles.cache.find((role) => role.name === "P2");
     let p3 = message.member.guild.roles.cache.find((role) => role.name === "P3");
     let p4 = message.member.guild.roles.cache.find((role) => role.name === "P4");
-    let controller = message.member.guild.roles.cache.find((role) => role.name === "Controllers");
+    let controller = message.member.guild.roles.cache.find((role) => role.name === "Controller");
     let memberRole = message.member.guild.roles.cache.find((role) => role.name === "Member");
     return { p0, p1, p2, p3, p4, controller, memberRole };
 };
