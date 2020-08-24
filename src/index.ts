@@ -2,7 +2,6 @@ require("dotenv").config();
 import { Client, Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
-import { error } from "console";
 const client = new Discord.Client();
 const axios = require("axios").default;
 
@@ -165,8 +164,8 @@ function roleSelector(
   pilotRating: number,
   rating: number
 ): Roles {
-  let roles: Array<any> = [];
-  let roleNames = [];
+  let roles: Array<Discord.Role> = [];
+  let roleNames: Array<String> = [];
   const roleSymbol = findRoles(message);
   if (pilotRating === 0) {
     if (!checkForExistingRole(message, "P0")) {
