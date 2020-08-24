@@ -13,6 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "watch": "tsc -p tsconfig.json -w",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

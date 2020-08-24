@@ -41,16 +41,30 @@ client.on("message", async (message) => {
                             .then((res) => { })
                             .catch((err) => {
                             if (err.httpStatus === 403) {
-                                message.reply('I do not have permission to adjust your nickname');
+                                message.reply("I do not have permission to adjust your nickname");
                             }
                             console.log(`Unable to adjust nickname for ${full_name}`);
                         });
                     }
                     let newRoles = roleSelector(message, pilotRating, rating);
                     const member = message.mentions.members.first();
-                    message.member.roles.add(newRoles.roles);
                     let rolesString = newRoles.roleNames.join(", ");
-                    const roleString = `You have been assigned the following roles: ${rolesString}`;
+                    let roleString;
+                    if (newRoles.roles.length === 0) {
+                        roleString =
+                            "You already have all the roles according to your VATSIM ratings";
+                    }
+                    else {
+                        message.member.roles.add(newRoles.roles).catch((error) => {
+                            if (error.httpStatus === 403) {
+                                console.log(`I do not have permission to adjust roles for ${message.member.user.tag}`);
+                            }
+                            else {
+                                console.log(error);
+                            }
+                        });
+                        roleString = `You have been assigned the following roles: ${rolesString}`;
+                    }
                     const replyMessage = [nameReply, roleString]
                         .filter(Boolean)
                         .join(". ");
@@ -64,69 +78,96 @@ client.on("message", async (message) => {
                 }
                 else {
                     console.log(error);
-                    message.reply('An unknown error has occured please contact @Foestauf#4056');
+                    message.reply("An unknown error has occurred please contact @Foestauf#4056");
                 }
             }
         }
     }
 });
-function roleString(roles) {
-    if (roles.length === 0)
-        return false;
-    else {
-        return true;
-    }
-}
 function roleSelector(message, pilotRating, rating) {
     let roles = [];
     let roleNames = [];
     const roleSymbol = findRoles(message);
     if (pilotRating === 0) {
-        roles.push(roleSymbol.p0);
-        roleNames.push(roleSymbol.p0.name);
+        if (!checkForExistingRole(message, "P0")) {
+            roles.push(roleSymbol.p0);
+            roleNames.push(roleSymbol.p0.name);
+        }
     }
     if (pilotRating === 1) {
-        roles.push(roleSymbol.p0);
-        roles.push(roleSymbol.p1);
-        roleNames.push(roleSymbol.p0.name);
-        roleNames.push(roleSymbol.p1.name);
+        if (!checkForExistingRole(message, "P0")) {
+            roles.push(roleSymbol.p0);
+            roleNames.push(roleSymbol.p0.name);
+        }
+        if (!checkForExistingRole(message, "P1")) {
+            roles.push(roleSymbol.p1);
+            roleNames.push(roleSymbol.p1.name);
+        }
     }
     if (pilotRating === 3) {
-        roles.push(roleSymbol.p0);
-        roles.push(roleSymbol.p1);
-        roles.push(roleSymbol.p2);
-        roleNames.push(roleSymbol.p0.name);
-        roleNames.push(roleSymbol.p1.name);
-        roleNames.push(roleSymbol.p2.name);
+        if (!checkForExistingRole(message, "P0")) {
+            roles.push(roleSymbol.p0);
+            roleNames.push(roleSymbol.p0.name);
+        }
+        if (!checkForExistingRole(message, "P1")) {
+            roles.push(roleSymbol.p1);
+            roleNames.push(roleSymbol.p1.name);
+        }
+        if (!checkForExistingRole(message, "P2")) {
+            roles.push(roleSymbol.p2);
+            roleNames.push(roleSymbol.p2.name);
+        }
     }
     if (pilotRating === 7) {
-        roles.push(roleSymbol.p0);
-        roles.push(roleSymbol.p1);
-        roles.push(roleSymbol.p2);
-        roles.push(roleSymbol.p3);
-        roleNames.push(roleSymbol.p0.name);
-        roleNames.push(roleSymbol.p1.name);
-        roleNames.push(roleSymbol.p2.name);
-        roleNames.push(roleSymbol.p3.name);
+        if (!checkForExistingRole(message, "P0")) {
+            roles.push(roleSymbol.p0);
+            roleNames.push(roleSymbol.p0.name);
+        }
+        if (!checkForExistingRole(message, "P1")) {
+            roles.push(roleSymbol.p1);
+            roleNames.push(roleSymbol.p1.name);
+        }
+        if (!checkForExistingRole(message, "P2")) {
+            roles.push(roleSymbol.p2);
+            roleNames.push(roleSymbol.p2.name);
+        }
+        if (!checkForExistingRole(message, "P3")) {
+            roles.push(roleSymbol.p3);
+            roleNames.push(roleSymbol.p3.name);
+        }
     }
     if (pilotRating === 15) {
-        roles.push(roleSymbol.p0);
-        roles.push(roleSymbol.p1);
-        roles.push(roleSymbol.p2);
-        roles.push(roleSymbol.p3);
-        roles.push(roleSymbol.p4);
-        roleNames.push(roleSymbol.p0.name);
-        roleNames.push(roleSymbol.p1.name);
-        roleNames.push(roleSymbol.p2.name);
-        roleNames.push(roleSymbol.p3.name);
-        roleNames.push(roleSymbol.p4.name);
+        if (!checkForExistingRole(message, "P0")) {
+            roles.push(roleSymbol.p0);
+            roleNames.push(roleSymbol.p0.name);
+        }
+        if (!checkForExistingRole(message, "P1")) {
+            roles.push(roleSymbol.p1);
+            roleNames.push(roleSymbol.p1.name);
+        }
+        if (!checkForExistingRole(message, "P2")) {
+            roles.push(roleSymbol.p2);
+            roleNames.push(roleSymbol.p2.name);
+        }
+        if (!checkForExistingRole(message, "P3")) {
+            roles.push(roleSymbol.p3);
+            roleNames.push(roleSymbol.p3.name);
+        }
+        if (!checkForExistingRole(message, "P4")) {
+            roles.push(roleSymbol.p4);
+            roleNames.push(roleSymbol.p4.name);
+        }
     }
     if (rating > 1) {
-        roles.push(roleSymbol.controller);
-        roleNames.push(roleSymbol.controller.name);
+        if (!checkForExistingRole(message, "Controller")) {
+            roles.push(roleSymbol.controller);
+            roleNames.push(roleSymbol.controller.name);
+        }
     }
-    roles.push(roleSymbol.memberRole);
-    roleNames.push(roleSymbol.memberRole.name);
+    if (!checkForExistingRole(message, "Member")) {
+        roles.push(roleSymbol.memberRole);
+        roleNames.push(roleSymbol.memberRole.name);
+    }
     return { roles, roleNames };
 }
 const findRoles = (message) => {
@@ -138,6 +179,14 @@ const findRoles = (message) => {
     let controller = message.member.guild.roles.cache.find((role) => role.name === "Controller");
     let memberRole = message.member.guild.roles.cache.find((role) => role.name === "Member");
     return { p0, p1, p2, p3, p4, controller, memberRole };
+};
+const checkForExistingRole = (message, roleName) => {
+    if (message.member.roles.cache.find((role) => role.name === roleName)) {
+        return true;
+        console.log("Does not have role I should add it");
+    }
+    else
+        return false;
 };
 client.login(process.env.TOKEN);
 //# sourceMappingURL=index.js.map
