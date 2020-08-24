@@ -2,6 +2,7 @@ require("dotenv").config();
 import { Client, Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
+import { error } from "console";
 const client = new Discord.Client();
 const axios = require("axios").default;
 
@@ -62,6 +63,7 @@ client.on("message", async (message: Message) => {
               name_last,
             } = response.data;
             let full_name = name_first + " " + name_last;
+
             if (!message.guild.me.hasPermission("MANAGE_NICKNAMES"))
               return message.channel.send(
                 "I do not have permission to adjust nickname"
@@ -93,20 +95,35 @@ client.on("message", async (message: Message) => {
                 .setNickname(full_name)
                 .then((res: any) => {})
                 .catch((err: any) => {
-                  if (err.httpStatus === 403)
-                  {
-                    message.reply('I do not have permission to adjust your nickname');
+                  if (err.httpStatus === 403) {
+                    message.reply(
+                      "I do not have permission to adjust your nickname"
+                    );
                   }
-                  console.log(`Unable to adjust nickname for ${full_name}`)
-                })
-                ;
+                  console.log(`Unable to adjust nickname for ${full_name}`);
+                });
             }
 
             let newRoles = roleSelector(message, pilotRating, rating);
             const member = message.mentions.members.first();
-            message.member.roles.add(newRoles.roles);
             let rolesString = newRoles.roleNames.join(", ");
-            const roleString = `You have been assigned the following roles: ${rolesString}`;
+            let roleString: String;
+            if (newRoles.roles.length === 0) {
+              roleString =
+                "You already have all the roles according to your VATSIM ratings";
+            } else {
+              message.member.roles.add(newRoles.roles).catch((error) => {
+                if (error.httpStatus === 403) {
+                  console.log(
+                    `I do not have permission to adjust roles for ${message.member.user.tag}`
+                  );
+                } else {
+                  console.log(error);
+                }
+              });
+
+              roleString = `You have been assigned the following roles: ${rolesString}`;
+            }
             const replyMessage = [nameReply, roleString]
               .filter(Boolean)
               .join(". ");
@@ -124,93 +141,165 @@ client.on("message", async (message: Message) => {
             // END reaction await
           });
       } catch (error) {
-        console.log(error)
+        console.log(error);
         if (error.response.status === 404) {
           message.channel.send(`VATSIM ID "${args[0]}" not found`);
         } else {
           console.log(error);
-          message.reply('An unknown error has occured please contact @Foestauf#4056')
+          message.reply(
+            "An unknown error has occurred please contact @Foestauf#4056"
+          );
         }
       }
     }
   }
 });
 
-function roleString(roles: string | any[]) {
-  if (roles.length === 0) return false;
-  else {
-    return true;
-  }
+interface Roles {
+  roles: Array<Discord.Role>;
+  roleNames: Array<String>;
 }
 
-function roleSelector(message: Message, pilotRating: number, rating: number) {
-  let roles = [];
+function roleSelector(
+  message: Message,
+  pilotRating: number,
+  rating: number
+): Roles {
+  let roles: Array<any> = [];
   let roleNames = [];
   const roleSymbol = findRoles(message);
   if (pilotRating === 0) {
-    roles.push(roleSymbol.p0);
-    roleNames.push(roleSymbol.p0.name);
-  }
-  if (pilotRating === 1) {
-    roles.push(roleSymbol.p0);
-    roles.push(roleSymbol.p1);
-    roleNames.push(roleSymbol.p0.name);
-    roleNames.push(roleSymbol.p1.name);
-  }
-  if (pilotRating === 3) {
-    roles.push(roleSymbol.p0);
-    roles.push(roleSymbol.p1);
-    roles.push(roleSymbol.p2);
-    roleNames.push(roleSymbol.p0.name);
-    roleNames.push(roleSymbol.p1.name);
-    roleNames.push(roleSymbol.p2.name);
-  }
-  if (pilotRating === 7) {
-    roles.push(roleSymbol.p0);
-    roles.push(roleSymbol.p1);
-    roles.push(roleSymbol.p2);
-    roles.push(roleSymbol.p3);
-    roleNames.push(roleSymbol.p0.name);
-    roleNames.push(roleSymbol.p1.name);
-    roleNames.push(roleSymbol.p2.name);
-    roleNames.push(roleSymbol.p3.name);
-  }
-  if (pilotRating === 15) {
-    roles.push(roleSymbol.p0);
-    roles.push(roleSymbol.p1);
-    roles.push(roleSymbol.p2);
-    roles.push(roleSymbol.p3);
-    roles.push(roleSymbol.p4);
-    roleNames.push(roleSymbol.p0.name);
-    roleNames.push(roleSymbol.p1.name);
-    roleNames.push(roleSymbol.p2.name);
-    roleNames.push(roleSymbol.p3.name);
-    roleNames.push(roleSymbol.p4.name);
-  }
-  if (rating > 1) {
-    roles.push(roleSymbol.controller);
-    roleNames.push(roleSymbol.controller.name);
+    if (!checkForExistingRole(message, "P0")) {
+      roles.push(roleSymbol.p0);
+      roleNames.push(roleSymbol.p0.name);
+    }
   }
 
-  roles.push(roleSymbol.memberRole);
-  roleNames.push(roleSymbol.memberRole.name);
+  if (pilotRating === 1) {
+    if (!checkForExistingRole(message, "P0")) {
+      roles.push(roleSymbol.p0);
+      roleNames.push(roleSymbol.p0.name);
+    }
+
+    if (!checkForExistingRole(message, "P1")) {
+      roles.push(roleSymbol.p1);
+      roleNames.push(roleSymbol.p1.name);
+    }
+  }
+  if (pilotRating === 3) {
+    if (!checkForExistingRole(message, "P0")) {
+      roles.push(roleSymbol.p0);
+      roleNames.push(roleSymbol.p0.name);
+    }
+
+    if (!checkForExistingRole(message, "P1")) {
+      roles.push(roleSymbol.p1);
+      roleNames.push(roleSymbol.p1.name);
+    }
+
+    if (!checkForExistingRole(message, "P2")) {
+      roles.push(roleSymbol.p2);
+      roleNames.push(roleSymbol.p2.name);
+    }
+  }
+  if (pilotRating === 7) {
+    if (!checkForExistingRole(message, "P0")) {
+      roles.push(roleSymbol.p0);
+      roleNames.push(roleSymbol.p0.name);
+    }
+
+    if (!checkForExistingRole(message, "P1")) {
+      roles.push(roleSymbol.p1);
+      roleNames.push(roleSymbol.p1.name);
+    }
+
+    if (!checkForExistingRole(message, "P2")) {
+      roles.push(roleSymbol.p2);
+      roleNames.push(roleSymbol.p2.name);
+    }
+
+    if (!checkForExistingRole(message, "P3")) {
+      roles.push(roleSymbol.p3);
+      roleNames.push(roleSymbol.p3.name);
+    }
+  }
+  if (pilotRating === 15) {
+    if (!checkForExistingRole(message, "P0")) {
+      roles.push(roleSymbol.p0);
+      roleNames.push(roleSymbol.p0.name);
+    }
+
+    if (!checkForExistingRole(message, "P1")) {
+      roles.push(roleSymbol.p1);
+      roleNames.push(roleSymbol.p1.name);
+    }
+
+    if (!checkForExistingRole(message, "P2")) {
+      roles.push(roleSymbol.p2);
+      roleNames.push(roleSymbol.p2.name);
+    }
+
+    if (!checkForExistingRole(message, "P3")) {
+      roles.push(roleSymbol.p3);
+
+      roleNames.push(roleSymbol.p3.name);
+    }
+
+    if (!checkForExistingRole(message, "P4")) {
+      roles.push(roleSymbol.p4);
+      roleNames.push(roleSymbol.p4.name);
+    }
+  }
+  if (rating > 1) {
+    if (!checkForExistingRole(message, "Controller")) {
+      roles.push(roleSymbol.controller);
+      roleNames.push(roleSymbol.controller.name);
+    }
+  }
+
+  if (!checkForExistingRole(message, "Member")) {
+    roles.push(roleSymbol.memberRole);
+    roleNames.push(roleSymbol.memberRole.name);
+  }
 
   return { roles, roleNames };
 }
 
 const findRoles = (message: any) => {
-  let p0 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P0");
-  let p1 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P1");
-  let p2 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P2");
-  let p3 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P3");
-  let p4 = message.member.guild.roles.cache.find((role: { name: string; }) => role.name === "P4");
-  let controller = message.member.guild.roles.cache.find(
+  let p0: Discord.Role = message.member.guild.roles.cache.find(
+    (role: { name: string }) => role.name === "P0"
+  );
+  let p1: Discord.Role = message.member.guild.roles.cache.find(
+    (role: { name: string }) => role.name === "P1"
+  );
+  let p2: Discord.Role = message.member.guild.roles.cache.find(
+    (role: { name: string }) => role.name === "P2"
+  );
+  let p3: Discord.Role = message.member.guild.roles.cache.find(
+    (role: { name: string }) => role.name === "P3"
+  );
+  let p4: Discord.Role = message.member.guild.roles.cache.find(
+    (role: { name: string }) => role.name === "P4"
+  );
+  let controller: Discord.Role = message.member.guild.roles.cache.find(
     (role: { name: string }) => role.name === "Controller"
   );
-  let memberRole = message.member.guild.roles.cache.find(
+  let memberRole: Discord.Role = message.member.guild.roles.cache.find(
     (role: { name: string }) => role.name === "Member"
   );
 
   return { p0, p1, p2, p3, p4, controller, memberRole };
+};
+
+const checkForExistingRole = (message: Message, roleName: String): boolean => {
+  if (
+    message.member.roles.cache.find(
+      (role: { name: string }) => role.name === roleName
+    )
+  ) {
+    return true;
+
+    console.log("Does not have role I should add it");
+  } else return false;
 };
 client.login(process.env.TOKEN);
