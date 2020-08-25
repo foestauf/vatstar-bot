@@ -142,7 +142,8 @@ client.on("message", async (message: Message) => {
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
-          message.channel.send(`VATSIM ID "${args[0]}" not found`);
+          message.channel.send(`VATSIM ID "${args[0]}" not found. If you are certain you have typed your CID correctly this could mean
+          that you have not completed the new member orientation course "P0" and therefore are unable to authenticate on the VATSIM network to include this discord server.`);
         } else {
           console.log(error);
           message.reply(
