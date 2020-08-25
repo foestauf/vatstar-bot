@@ -16,12 +16,17 @@ client.on("message", async (message) => {
         const command = args.shift().toLowerCase();
         let response = {};
         if (message.content === "!ping") {
-            message.channel.send("Pong!");
+            message.channel.send("Pong!").then(msg => {
+                msg.delete({ timeout: 20000 });
+            });
         }
         else if (command === "vatstar") {
             console.log(`User ${message.member} is paging us`);
             if (!args.length) {
-                return message.reply(`Please respond in the format of "!vatstar 1234567" with your VATSIM ID`);
+                message.delete({ timeout: 30000 });
+                return message.reply(`Please respond in the format of "!vatstar 1234567" with your VATSIM ID`).then(msg => {
+                    msg.delete({ timeout: 30000 });
+                });
             }
             console.log(`Command name: ${command}\nArguments: ${args}`);
             try {
@@ -32,7 +37,7 @@ client.on("message", async (message) => {
                     const { id, rating, pilotrating: pilotRating, name_first, name_last, } = response.data;
                     let full_name = name_first + " " + name_last;
                     if (!message.guild.me.hasPermission("MANAGE_NICKNAMES"))
-                        return message.channel.send("I do not have permission to adjust nickname");
+                        return message.channel.send("I do not have permission to adjust nicknames");
                     let nameReply;
                     if (message.member.displayName !== full_name) {
                         nameReply = `Hello ${full_name}, I will adjust your nickname`;
@@ -41,7 +46,10 @@ client.on("message", async (message) => {
                             .then((res) => { })
                             .catch((err) => {
                             if (err.httpStatus === 403) {
-                                message.reply("I do not have permission to adjust your nickname");
+                                message.reply("I do not have permission to adjust your nickname")
+                                    .then(msg => {
+                                    msg.delete({ timeout: 20000 });
+                                });
                             }
                             console.log(`Unable to adjust nickname for ${full_name}`);
                         });
@@ -68,17 +76,27 @@ client.on("message", async (message) => {
                     const replyMessage = [nameReply, roleString]
                         .filter(Boolean)
                         .join(". ");
-                    message.reply(replyMessage);
+                    message.reply(replyMessage)
+                        .then(msg => {
+                        msg.delete({ timeout: 60000 });
+                    });
+                    message.delete({ timeout: 60000 });
                 });
             }
             catch (error) {
                 console.log(error);
                 if (error.response.status === 404) {
-                    message.channel.send(`VATSIM ID "${args[0]}" not found`);
+                    message.delete({ timeout: 60000 }).catch((error) => console.log(error));
+                    message.reply(`VATSIM ID "${args[0]}" not found. If you are certain you have typed your CID correctly this could mean that you have not completed the new member orientation course "P0" and therefore are unable to authenticate on the VATSIM network to include this discord server.`)
+                        .then(msg => {
+                        msg.delete({ timeout: 60000 });
+                    });
                 }
                 else {
                     console.log(error);
-                    message.reply("An unknown error has occurred please contact @Foestauf#4056");
+                    message.reply("An unknown error has occurred please contact @Foestauf#4056").then(msg => {
+                        msg.delete({ timeout: 30000 });
+                    });
                 }
             }
         }
