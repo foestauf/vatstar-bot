@@ -2,6 +2,7 @@ require("dotenv").config();
 import { Client, Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
+import { newUser } from "./utils";
 const client = new Discord.Client();
 const axios = require("axios").default;
 
@@ -38,6 +39,11 @@ client.on("message", async (message: Message) => {
     //     `Operation complete. Assigned the member role to ${count}`
     //   );
     // }
+
+    if (message.content === "!newuser") {
+      message.reply('I trying');
+      newUser('joe');
+    }
 
     if (message.content === "!ping") {
       message.channel.send("Pong!").then(msg => {

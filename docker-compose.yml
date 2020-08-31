@@ -11,7 +11,7 @@ services:
             - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
             - ./mongo-volume:/data/db
         ports:
-            - '27017-27019:27017-27019'
+            - '127.0.0.1:27017-27019:27017-27019'
     watchtower:
         image: containrrr/watchtower
         volumes: 
