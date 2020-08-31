@@ -8,6 +8,7 @@ mongoose.connect('mongodb://localhost/vatstar', {
     useCreateIndex: true
 });
 
+
 const userSchema = new mongoose.Schema({
     name: {type: String, unique: true},
     createdAt: {type: Date, default: Date.now},
