@@ -12,3 +12,15 @@ services:
             - ./mongo-volume:/data/db
         ports:
             - '27017-27019:27017-27019'
+    watchtower:
+        image: containrrr/watchtower
+        volumes: 
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ~/.docker/config.json:/config.json
+        command: --interval 30
+    vatstar:
+        image: index.docker.io/foestauf/vatstar:dev
+        environment: 
+            - TOKEN
+        depends_on: 
+            - database
