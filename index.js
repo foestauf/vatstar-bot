@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
 const Discord = require("discord.js");
+const utils_1 = require("./utils");
 const client = new Discord.Client();
 const axios = require("axios").default;
 const { prefix, channelId } = require("./config.json");
@@ -15,6 +16,10 @@ client.on("message", async (message) => {
         const args = message.content.slice(prefix.length).trim().split(" ");
         const command = args.shift().toLowerCase();
         let response = {};
+        if (message.content === "!newuser") {
+            message.reply('I trying');
+            utils_1.newUser('joe');
+        }
         if (message.content === "!ping") {
             message.channel.send("Pong!").then(msg => {
                 msg.delete({ timeout: 20000 });
