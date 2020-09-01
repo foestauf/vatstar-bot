@@ -6,8 +6,13 @@ const utils_1 = require("./utils");
 const client = new Discord.Client();
 const axios = require("axios").default;
 const { prefix, channelId } = require("./config.json");
+let lobbyChannel;
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    lobbyChannel = client.channels.cache.find((channel) => channel.name === "lobby");
+});
+client.on('guildMemberAdd', (member) => {
+    utils_1.newUser(member);
 });
 client.on("message", async (message) => {
     if (!message.content.startsWith(prefix) || message.author.bot)
@@ -16,11 +21,8 @@ client.on("message", async (message) => {
         const args = message.content.slice(prefix.length).trim().split(" ");
         const command = args.shift().toLowerCase();
         let response = {};
-        if (message.content === "!newuser") {
-            message.reply('I trying');
-            utils_1.newUser('joe');
-        }
         if (message.content === "!ping") {
+            console.log(utils_1.retrieveUser(message.member));
             message.channel.send("Pong!").then(msg => {
                 msg.delete({ timeout: 20000 });
             });
@@ -83,6 +85,10 @@ client.on("message", async (message) => {
                         .join(". ");
                     message.reply(replyMessage)
                         .then(msg => {
+                        if (utils_1.retrieveUser(message.member).isNewUser) {
+                            client.channels.cache.get(lobbyChannel.id).send('Hello There');
+                            utils_1.updateUser(message.member, "clearNewUser");
+                        }
                         msg.delete({ timeout: 60000 });
                     });
                     message.delete({ timeout: 60000 });

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newUser = void 0;
+exports.updateUser = exports.retrieveUser = exports.newUser = void 0;
 const mongoose = require("mongoose");
 mongoose.connect('mongodb://localhost/vatstar', {
     user: "mongodb",
@@ -11,7 +11,8 @@ mongoose.connect('mongodb://localhost/vatstar', {
     useCreateIndex: true
 });
 const userSchema = new mongoose.Schema({
-    name: { type: String, unique: true },
+    name: { type: String, required: true },
+    userId: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     isNewUser: { type: Boolean, default: true },
     lastSeen: { type: Date, default: Date.now }
@@ -22,9 +23,11 @@ db.once('open', () => {
     console.log('DB CONNECTION SUCCESSFUL');
 });
 const User = mongoose.model('User', userSchema);
-function newUser(name) {
-    const user = new User({ name: name });
-    console.log('I got to new user');
+function newUser(member) {
+    const user = new User({
+        userId: member.id,
+        name: member.displayName
+    });
     user.save((err, user) => {
         if (err)
             return console.log(err);
@@ -32,4 +35,29 @@ function newUser(name) {
     });
 }
 exports.newUser = newUser;
+function retrieveUser(member) {
+    let userDoc;
+    User.findOne({ userId: member.id }, (err, res) => {
+        if (err)
+            console.log(err);
+        console.log(res);
+        userDoc = res;
+        return userDoc;
+    });
+}
+exports.retrieveUser = retrieveUser;
+function updateUser(member, action) {
+    let query = { userId: member.id };
+    switch (action) {
+        case "clearNewUser":
+            User.findOneAndUpdate(query, { isNewUser: false }, (err) => {
+                if (err)
+                    console.log(err);
+            });
+            break;
+        default:
+            break;
+    }
+}
+exports.updateUser = updateUser;
 //# sourceMappingURL=utils.js.map

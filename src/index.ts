@@ -2,19 +2,30 @@ require("dotenv").config();
 import { Client, Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
-import { newUser } from "./utils";
+import { newUser, retrieveUser, updateUser } from "./utils";
 const client = new Discord.Client();
 const axios = require("axios").default;
 
 const { prefix, channelId } = require("./config.json");
 
+let lobbyChannel: Channel;
+
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
+  lobbyChannel = client.channels.cache.find(
+    (channel: Discord.TextChannel) => channel.name === "lobby"
+  );
 });
 
 interface channelName extends Discord.DMChannel {
   name: string;
 }
+
+client.on('guildMemberAdd', (member: Discord.GuildMember) => {
+  newUser(member);
+})
+
+
 
 client.on("message", async (message: Message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -40,12 +51,8 @@ client.on("message", async (message: Message) => {
     //   );
     // }
 
-    if (message.content === "!newuser") {
-      message.reply('I trying');
-      newUser('joe');
-    }
-
     if (message.content === "!ping") {
+      console.log(retrieveUser(message.member))
       message.channel.send("Pong!").then(msg => {
         msg.delete({timeout: 20000})
       });
@@ -97,10 +104,9 @@ client.on("message", async (message: Message) => {
             //     const reaction = collected.first();
 
             //     if (reaction.emoji.name === "👍") {
-            let nameReply;
+            let nameReply: string;
             if (message.member.displayName !== full_name) {
               nameReply = `Hello ${full_name}, I will adjust your nickname`;
-
               message.member
                 .setNickname(full_name)
                 .then((res: any) => {})
@@ -142,6 +148,13 @@ client.on("message", async (message: Message) => {
               .join(". ");
             message.reply(replyMessage)
             .then(msg => {
+                if (retrieveUser(message.member).isNewUser) {
+                  // @ts-expect-error
+
+                  client.channels.cache.get(lobbyChannel.id).send('Hello There');
+                  updateUser(message.member, "clearNewUser");
+
+                }
               msg.delete({timeout: 60000})
             });
             message.delete({timeout: 60000})
@@ -263,7 +276,6 @@ function roleSelector(
 
     if (!checkForExistingRole(message, "P3")) {
       roles.push(roleSymbol.p3);
-
       roleNames.push(roleSymbol.p3.name);
     }
 
