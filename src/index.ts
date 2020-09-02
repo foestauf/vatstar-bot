@@ -149,10 +149,10 @@ client.on("message", async (message: Message) => {
             message.reply(replyMessage)
             .then(async msg => {
                 if ((await retrieveUser(message.member)).isNewUser) {
-                  // @ts-expect-error
-                  client.channels.cache.get(lobbyChannel.id).send(
-                    `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`
-                    );
+                  // // @ts-expect-error
+                  // client.channels.cache.get(lobbyChannel.id).send(
+                  //   `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`
+                  //   );
                   updateUser(message.member, "clearNewUser");
 
                 }
@@ -322,7 +322,6 @@ const findRoles = (message: any) => {
   let memberRole: Discord.Role = message.member.guild.roles.cache.find(
     (role: { name: string }) => role.name === "Member"
   );
-
   return { p0, p1, p2, p3, p4, controller, memberRole };
 };
 
@@ -333,8 +332,6 @@ const checkForExistingRole = (message: Message, roleName: String): boolean => {
     )
   ) {
     return true;
-
-    console.log("Does not have role I should add it");
   } else return false;
 };
 client.login(process.env.TOKEN);
