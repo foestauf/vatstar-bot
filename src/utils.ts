@@ -46,14 +46,15 @@ interface UserSchema {
     _id: Object
 }
 
-export function retrieveUser(member: GuildMember): UserSchema {
+export async function retrieveUser (member: GuildMember): Promise<UserSchema> {
     let userDoc: UserSchema;
-    User.findOne({userId: member.id}, (err, res: UserSchema) => {
+    await User.findOne({userId: member.id}, (err, res: UserSchema) => {
+        console.log('Server response' + res);
         if (err) console.log(err);
-        console.log(res);
         userDoc = res;
         return userDoc;
     })
+    return userDoc;
 }
 
 export function updateUser(member: GuildMember, action: String) {

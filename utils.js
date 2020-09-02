@@ -35,15 +35,16 @@ function newUser(member) {
     });
 }
 exports.newUser = newUser;
-function retrieveUser(member) {
+async function retrieveUser(member) {
     let userDoc;
-    User.findOne({ userId: member.id }, (err, res) => {
+    await User.findOne({ userId: member.id }, (err, res) => {
+        console.log('Server response' + res);
         if (err)
             console.log(err);
-        console.log(res);
         userDoc = res;
         return userDoc;
     });
+    return userDoc;
 }
 exports.retrieveUser = retrieveUser;
 function updateUser(member, action) {

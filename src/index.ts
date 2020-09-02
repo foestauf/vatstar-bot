@@ -1,5 +1,5 @@
 require("dotenv").config();
-import { Client, Message, Channel } from "discord.js";
+import { Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
 import { newUser, retrieveUser, updateUser } from "./utils";
@@ -147,11 +147,13 @@ client.on("message", async (message: Message) => {
               .filter(Boolean)
               .join(". ");
             message.reply(replyMessage)
-            .then(msg => {
-                if (retrieveUser(message.member).isNewUser) {
+            .then(async msg => {
+                if ((await retrieveUser(message.member)).isNewUser) {
                   // @ts-expect-error
 
-                  client.channels.cache.get(lobbyChannel.id).send('Hello There');
+                  client.channels.cache.get(lobbyChannel.id).send(
+                    `Hey <@${message.member.id}>, welcome to VATSTAR Virtual Pilot Training :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`
+                    );
                   updateUser(message.member, "clearNewUser");
 
                 }
