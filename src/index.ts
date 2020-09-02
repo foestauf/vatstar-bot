@@ -149,10 +149,10 @@ client.on("message", async (message: Message) => {
             message.reply(replyMessage)
             .then(async msg => {
                 if ((await retrieveUser(message.member)).isNewUser) {
-                  // // @ts-expect-error
-                  // client.channels.cache.get(lobbyChannel.id).send(
-                  //   `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`
-                  //   );
+                  // @ts-expect-error
+                  client.channels.cache.get(lobbyChannel.id).send(
+                    `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`
+                    );
                   updateUser(message.member, "clearNewUser");
 
                 }
