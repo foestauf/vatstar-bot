@@ -86,7 +86,7 @@ client.on("message", async (message) => {
                     message.reply(replyMessage)
                         .then(async (msg) => {
                         if ((await utils_1.retrieveUser(message.member)).isNewUser) {
-                            client.channels.cache.get(lobbyChannel.id).send(`Hey <@${message.member.id}>, welcome to VATSTAR Virtual Pilot Training :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`);
+                            client.channels.cache.get(lobbyChannel.id).send(`Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`);
                             utils_1.updateUser(message.member, "clearNewUser");
                         }
                         msg.delete({ timeout: 60000 });
