@@ -3,6 +3,7 @@ services:
     database:
         image: 'mongo'
         container_name: 'vatstar-db'
+        restart: 'always'
         environment: 
             - MONGO_INITDB_DATABASE=vatstar
             - MONGO_INITDB_ROOT_USERNAME=mongodb

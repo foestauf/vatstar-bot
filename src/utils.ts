@@ -1,6 +1,6 @@
 import mongoose = require('mongoose');
 import { GuildMember } from 'discord.js';
-mongoose.connect('mongodb://localhost/vatstar', {
+mongoose.connect('mongodb://127.0.0.1/vatstar', {
     user: "mongodb",
     pass: "mongodb",
     useNewUrlParser: true,
