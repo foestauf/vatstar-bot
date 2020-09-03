@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUser = exports.retrieveUser = exports.newUser = void 0;
 const mongoose = require("mongoose");
-mongoose.connect('mongodb://172.19.0.3/vatstar', {
+mongoose.connect('mongodb://database/vatstar', {
     user: "mongodb",
     pass: "mongodb",
     useNewUrlParser: true,
