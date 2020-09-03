@@ -89,9 +89,9 @@ client.on("message", async (message) => {
                             client.channels.cache.get(lobbyChannel.id).send(`Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`);
                             utils_1.updateUser(message.member, "clearNewUser");
                         }
-                        msg.delete({ timeout: 60000 });
+                        msg.delete({ timeout: 60000 }).catch((error) => console.log(error));
                     });
-                    message.delete({ timeout: 60000 });
+                    message.delete({ timeout: 60000 }).catch((error) => console.log(error));
                 });
             }
             catch (error) {

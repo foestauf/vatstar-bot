@@ -3,6 +3,7 @@ import { Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
 import { newUser, retrieveUser, updateUser } from "./utils";
+import { error } from "console";
 const client = new Discord.Client();
 const axios = require("axios").default;
 
@@ -154,11 +155,11 @@ client.on("message", async (message: Message) => {
                     `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`
                     );
                   updateUser(message.member, "clearNewUser");
-
+                  
                 }
-              msg.delete({timeout: 60000})
+              msg.delete({timeout: 60000}).catch((error) => console.log(error))
             });
-            message.delete({timeout: 60000})
+            message.delete({timeout: 60000}).catch((error) => console.log(error))
             // } else {
             //   message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
             // }
