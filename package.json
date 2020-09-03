@@ -5,7 +5,7 @@
   "main": "vatstar.js",
   "dependencies": {
     "@types/mongoose": "^5.7.36",
-    "@types/node": "^14.6.0",
+    "@types/node": "^14.6.3",
     "axios": "^0.19.2",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
