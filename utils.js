@@ -12,7 +12,7 @@ mongoose.connect('mongodb://database/vatstar', {
 });
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    userId: { type: String, required: true },
+    userId: { type: String, required: true, unique: true },
     createdAt: { type: Date, default: Date.now },
     isNewUser: { type: Boolean, default: true },
     lastSeen: { type: Date, default: Date.now }
