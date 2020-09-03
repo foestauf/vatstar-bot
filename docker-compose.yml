@@ -20,7 +20,7 @@ services:
             - ~/.docker/config.json:/config.json
         command: --interval 30
     vatstar:
-        image: index.docker.io/foestauf/vatstar:dev
+        image: index.docker.io/foestauf/vatstar:latest
         environment: 
             - TOKEN
         depends_on: 
