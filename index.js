@@ -2,11 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
 const Discord = require("discord.js");
+const utils_1 = require("./utils");
 const client = new Discord.Client();
 const axios = require("axios").default;
 const { prefix, channelId } = require("./config.json");
+let lobbyChannel;
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    lobbyChannel = client.channels.cache.find((channel) => channel.name === "lobby");
+});
+client.on('guildMemberAdd', (member) => {
+    utils_1.newUser(member);
 });
 client.on("message", async (message) => {
     if (!message.content.startsWith(prefix) || message.author.bot)
@@ -16,6 +22,7 @@ client.on("message", async (message) => {
         const command = args.shift().toLowerCase();
         let response = {};
         if (message.content === "!ping") {
+            console.log(utils_1.retrieveUser(message.member));
             message.channel.send("Pong!").then(msg => {
                 msg.delete({ timeout: 20000 });
             });
@@ -77,10 +84,14 @@ client.on("message", async (message) => {
                         .filter(Boolean)
                         .join(". ");
                     message.reply(replyMessage)
-                        .then(msg => {
-                        msg.delete({ timeout: 60000 });
+                        .then(async (msg) => {
+                        if ((await utils_1.retrieveUser(message.member)).isNewUser) {
+                            client.channels.cache.get(lobbyChannel.id).send(`Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** :emoji1:  If you have any questions do not hesitate to ask :tada::hugging:.`);
+                            utils_1.updateUser(message.member, "clearNewUser");
+                        }
+                        msg.delete({ timeout: 60000 }).catch((error) => console.log(error));
                     });
-                    message.delete({ timeout: 60000 });
+                    message.delete({ timeout: 60000 }).catch((error) => console.log(error));
                 });
             }
             catch (error) {
@@ -201,7 +212,6 @@ const findRoles = (message) => {
 const checkForExistingRole = (message, roleName) => {
     if (message.member.roles.cache.find((role) => role.name === roleName)) {
         return true;
-        console.log("Does not have role I should add it");
     }
     else
         return false;

@@ -4,16 +4,18 @@
   "description": "VATSTAR bot",
   "main": "vatstar.js",
   "dependencies": {
+    "@types/mongoose": "^5.7.36",
     "@types/node": "^14.6.0",
     "axios": "^0.19.2",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
+    "mongoose": "^5.10.2",
     "typescript": "^3.9.7"
   },
   "devDependencies": {},
   "scripts": {
     "watch": "tsc -p tsconfig.json -w",
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
