@@ -150,9 +150,10 @@ client.on("message", async (message: Message) => {
             message.reply(replyMessage)
             .then(async msg => {
                 if ((await retrieveUser(message.member)).isNewUser) {
+                const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'emoji1');
                   // @ts-expect-error
                   client.channels.cache.get(lobbyChannel.id).send(
-                    `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** If you have any questions do not hesitate to ask :tada::hugging:.`
+                    `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** ${emoji1} If you have any questions do not hesitate to ask :tada::hugging:.`
                     );
                   updateUser(message.member, "clearNewUser");
                   
