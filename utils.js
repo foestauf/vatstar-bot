@@ -51,7 +51,12 @@ function updateUser(member, action) {
     let query = { userId: member.id };
     switch (action) {
         case "clearNewUser":
-            User.findOneAndUpdate(query, { isNewUser: false }, (err) => {
+            User.findOneAndUpdate(query, {
+                "$set": {
+                    name: member.nickname,
+                    isNewUser: false,
+                }
+            }, { new: true }, (err) => {
                 if (err)
                     console.log(err);
             });

@@ -11,11 +11,11 @@ mongoose.connect('mongodb://database/vatstar', {
 
 
 const userSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    userId: {type: String, required: true, unique: true},
-    createdAt: {type: Date, default: Date.now},
-    isNewUser: {type: Boolean, default: true},
-    lastSeen: {type: Date, default: Date.now}
+    name: { type: String, required: true },
+    userId: { type: String, required: true, unique: true },
+    createdAt: { type: Date, default: Date.now },
+    isNewUser: { type: Boolean, default: true },
+    lastSeen: { type: Date, default: Date.now }
 });
 
 const db = mongoose.connection;
@@ -46,9 +46,9 @@ interface UserSchema {
     _id: Object
 }
 
-export async function retrieveUser (member: GuildMember): Promise<UserSchema> {
+export async function retrieveUser(member: GuildMember): Promise<UserSchema> {
     let userDoc: UserSchema;
-    await User.findOne({userId: member.id}, (err, res: UserSchema) => {
+    await User.findOne({ userId: member.id }, (err, res: UserSchema) => {
         console.log('Server response' + res);
         if (err) console.log(err);
         userDoc = res;
@@ -58,13 +58,20 @@ export async function retrieveUser (member: GuildMember): Promise<UserSchema> {
 }
 
 export function updateUser(member: GuildMember, action: String) {
-    let query = { userId: member.id};
+    let query = { userId: member.id };
     switch (action) {
         case "clearNewUser":
-            User.findOneAndUpdate(query, { isNewUser: false}, (err) => {
-                if (err) console.log(err);
-            })
-            break;  
+            User.findOneAndUpdate(query,
+                {
+                    "$set": {
+
+                        name: member.nickname,
+                        isNewUser: false,
+                    }
+                }, { new: true }, (err) => {
+                    if (err) console.log(err);
+                })
+            break;
         default:
             break;
     }
