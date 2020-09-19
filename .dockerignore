@@ -4,3 +4,6 @@
 /.vscode/
 /mongo-volume/
 /.github/
+/.config/
+/.npm/
+.ash_history
