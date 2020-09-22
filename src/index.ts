@@ -27,7 +27,6 @@ client.on('guildMemberAdd', (member: Discord.GuildMember) => {
 })
 
 
-
 client.on("message", async (message: Message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   // @ts-expect-error

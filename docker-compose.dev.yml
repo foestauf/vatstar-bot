@@ -1,0 +1,13 @@
+version: '3'
+services:
+    vatstar:
+        build: .
+        command: sh -c "npm install && npm run start-dev"
+        working_dir: /root
+        volumes: 
+        - ./:/root:cached
+        environment: 
+            - TOKEN
+            - NODE_ENV=development
+        depends_on: 
+            - database

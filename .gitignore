@@ -2,4 +2,6 @@
 /mongo-volume/
 .env
 /.vscode/
+/.config/
 /.npm/
+.ash_history

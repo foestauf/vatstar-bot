@@ -12,10 +12,14 @@
     "mongoose": "^5.10.5",
     "typescript": "^4.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
   "scripts": {
     "watch": "tsc -p tsconfig.json -w",
     "start": "node index.js",
+    "start-dev": "nodemon index.js",
+    "develop": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
