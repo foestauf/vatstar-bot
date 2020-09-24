@@ -2,8 +2,9 @@ require("dotenv").config();
 import { Message, Channel } from "discord.js";
 
 import Discord = require("discord.js");
+import { roleSelector } from "./roles/roleSelector";
 import { newUser, retrieveUser, updateUser } from "./utils";
-import { error } from "console";
+
 const client = new Discord.Client();
 const axios = require("axios").default;
 
@@ -154,7 +155,7 @@ client.on("message", async (message: Message) => {
                   client.channels.cache.get(lobbyChannel.id).send(
                     `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** ${emoji1} If you have any questions do not hesitate to ask :tada::hugging:.`
                     );
-                  updateUser(message.member, "clearNewUser");
+                  updateUser(message.member, id, "clearNewUser");
                   
                 }
               msg.delete({timeout: 60000}).catch((error) => console.log(error))
@@ -192,147 +193,4 @@ client.on("message", async (message: Message) => {
   }
 });
 
-interface Roles {
-  roles: Array<Discord.Role>;
-  roleNames: Array<String>;
-}
-
-function roleSelector(
-  message: Message,
-  pilotRating: number,
-  rating: number
-): Roles {
-  let roles: Array<Discord.Role> = [];
-  let roleNames: Array<String> = [];
-  const roleSymbol = findRoles(message);
-  if (pilotRating === 0) {
-    if (!checkForExistingRole(message, "P0")) {
-      roles.push(roleSymbol.p0);
-      roleNames.push(roleSymbol.p0.name);
-    }
-  }
-
-  if (pilotRating === 1) {
-    if (!checkForExistingRole(message, "P0")) {
-      roles.push(roleSymbol.p0);
-      roleNames.push(roleSymbol.p0.name);
-    }
-
-    if (!checkForExistingRole(message, "P1")) {
-      roles.push(roleSymbol.p1);
-      roleNames.push(roleSymbol.p1.name);
-    }
-  }
-  if (pilotRating === 3) {
-    if (!checkForExistingRole(message, "P0")) {
-      roles.push(roleSymbol.p0);
-      roleNames.push(roleSymbol.p0.name);
-    }
-
-    if (!checkForExistingRole(message, "P1")) {
-      roles.push(roleSymbol.p1);
-      roleNames.push(roleSymbol.p1.name);
-    }
-
-    if (!checkForExistingRole(message, "P2")) {
-      roles.push(roleSymbol.p2);
-      roleNames.push(roleSymbol.p2.name);
-    }
-  }
-  if (pilotRating === 7) {
-    if (!checkForExistingRole(message, "P0")) {
-      roles.push(roleSymbol.p0);
-      roleNames.push(roleSymbol.p0.name);
-    }
-
-    if (!checkForExistingRole(message, "P1")) {
-      roles.push(roleSymbol.p1);
-      roleNames.push(roleSymbol.p1.name);
-    }
-
-    if (!checkForExistingRole(message, "P2")) {
-      roles.push(roleSymbol.p2);
-      roleNames.push(roleSymbol.p2.name);
-    }
-
-    if (!checkForExistingRole(message, "P3")) {
-      roles.push(roleSymbol.p3);
-      roleNames.push(roleSymbol.p3.name);
-    }
-  }
-  if (pilotRating === 15) {
-    if (!checkForExistingRole(message, "P0")) {
-      roles.push(roleSymbol.p0);
-      roleNames.push(roleSymbol.p0.name);
-    }
-
-    if (!checkForExistingRole(message, "P1")) {
-      roles.push(roleSymbol.p1);
-      roleNames.push(roleSymbol.p1.name);
-    }
-
-    if (!checkForExistingRole(message, "P2")) {
-      roles.push(roleSymbol.p2);
-      roleNames.push(roleSymbol.p2.name);
-    }
-
-    if (!checkForExistingRole(message, "P3")) {
-      roles.push(roleSymbol.p3);
-      roleNames.push(roleSymbol.p3.name);
-    }
-
-    if (!checkForExistingRole(message, "P4")) {
-      roles.push(roleSymbol.p4);
-      roleNames.push(roleSymbol.p4.name);
-    }
-  }
-  if (rating > 1) {
-    if (!checkForExistingRole(message, "Controller")) {
-      roles.push(roleSymbol.controller);
-      roleNames.push(roleSymbol.controller.name);
-    }
-  }
-
-  if (!checkForExistingRole(message, "Member")) {
-    roles.push(roleSymbol.memberRole);
-    roleNames.push(roleSymbol.memberRole.name);
-  }
-
-  return { roles, roleNames };
-}
-
-const findRoles = (message: any) => {
-  let p0: Discord.Role = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "P0"
-  );
-  let p1: Discord.Role = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "P1"
-  );
-  let p2: Discord.Role = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "P2"
-  );
-  let p3: Discord.Role = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "P3"
-  );
-  let p4: Discord.Role = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "P4"
-  );
-  let controller: Discord.Role = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "Controller"
-  );
-  let memberRole: Discord.Role = message.member.guild.roles.cache.find(
-    (role: { name: string }) => role.name === "Member"
-  );
-  return { p0, p1, p2, p3, p4, controller, memberRole };
-};
-
-const checkForExistingRole = (message: Message, roleName: String): boolean => {
-  if (
-    message.member.roles.cache.find(
-      (role: { name: string }) => role.name === roleName
-    )
-  ) {
-    return true;
-  } else return false;
-};
 client.login(process.env.TOKEN);
