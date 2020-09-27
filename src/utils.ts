@@ -1,5 +1,6 @@
 import mongoose = require('mongoose');
 import { GuildMember } from 'discord.js';
+
 mongoose.connect('mongodb://database/vatstar', {
     user: "mongodb",
     pass: "mongodb",
@@ -9,10 +10,10 @@ mongoose.connect('mongodb://database/vatstar', {
     useCreateIndex: true
 });
 
-
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     userId: { type: String, required: true, unique: true },
+    vatsimId: { type: String },
     createdAt: { type: Date, default: Date.now },
     isNewUser: { type: Boolean, default: true },
     lastSeen: { type: Date, default: Date.now }
@@ -49,7 +50,7 @@ interface UserSchema {
 export async function retrieveUser(member: GuildMember): Promise<UserSchema> {
     let userDoc: UserSchema;
     await User.findOne({ userId: member.id }, (err, res: UserSchema) => {
-        console.log('Server response' + res);
+        console.log('Server response: ' + res);
         if (err) console.log(err);
         userDoc = res;
         return userDoc;
@@ -57,16 +58,16 @@ export async function retrieveUser(member: GuildMember): Promise<UserSchema> {
     return userDoc;
 }
 
-export function updateUser(member: GuildMember, action: String) {
+export function updateUser(member: GuildMember, cid: String, action: String) {
     let query = { userId: member.id };
     switch (action) {
         case "clearNewUser":
             User.findOneAndUpdate(query,
                 {
                     "$set": {
-
                         name: member.nickname,
                         isNewUser: false,
+                        vatsimId: cid
                     }
                 }, { new: true }, (err) => {
                     if (err) console.log(err);

@@ -13,6 +13,7 @@ mongoose.connect('mongodb://database/vatstar', {
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     userId: { type: String, required: true, unique: true },
+    vatsimId: { type: String },
     createdAt: { type: Date, default: Date.now },
     isNewUser: { type: Boolean, default: true },
     lastSeen: { type: Date, default: Date.now }
@@ -38,7 +39,7 @@ exports.newUser = newUser;
 async function retrieveUser(member) {
     let userDoc;
     await User.findOne({ userId: member.id }, (err, res) => {
-        console.log('Server response' + res);
+        console.log('Server response: ' + res);
         if (err)
             console.log(err);
         userDoc = res;
@@ -47,7 +48,7 @@ async function retrieveUser(member) {
     return userDoc;
 }
 exports.retrieveUser = retrieveUser;
-function updateUser(member, action) {
+function updateUser(member, cid, action) {
     let query = { userId: member.id };
     switch (action) {
         case "clearNewUser":
@@ -55,6 +56,7 @@ function updateUser(member, action) {
                 "$set": {
                     name: member.nickname,
                     isNewUser: false,
+                    vatsimId: cid
                 }
             }, { new: true }, (err) => {
                 if (err)
