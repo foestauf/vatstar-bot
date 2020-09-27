@@ -25,3 +25,11 @@ services:
             - TOKEN
         depends_on: 
             - database
+    frontend:
+        image: index.docker.io/foestauf/frontend:latest
+        container_name: frontend
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
