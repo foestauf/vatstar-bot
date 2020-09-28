@@ -5,7 +5,8 @@
   "main": "init-mongo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "develop": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build"
+    "dev": "docker-compose up -d --build",
+    "prod": "docker-compose -f docker-compose.prod.yml up -d"
   },
   "repository": {
     "type": "git",

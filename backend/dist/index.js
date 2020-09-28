@@ -22,3 +22,8 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({
     extended: true,
 }));
+app.get('/sayHello', (req, res) => {
+    res.send('Hello from the back-end.');
+});
+app.listen(APP_PORT);
+console.log('Web server listening on port', APP_PORT);

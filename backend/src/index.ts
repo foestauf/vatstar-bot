@@ -15,7 +15,6 @@ mongoose
     .then(() => console.log('MongoDB connection successful'))
     .catch((err) => console.log(err));
 
-
 const APP_PORT = 4000;
 const app = express();
 
@@ -29,3 +28,12 @@ app.use(
     }),
 );
 
+app.get('/sayHello', (req, res) => {
+    interface Req extends Request{
+        user: String
+    }
+    res.send('Hello from the back-end.');
+});
+
+app.listen(APP_PORT);
+console.log('Web server listening on port', APP_PORT);
