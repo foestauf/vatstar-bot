@@ -51,8 +51,11 @@ services:
         volumes:
             - './backend:/app'
             - '/app/node_modules'
+        ports: 
+            - 4000:4000
         
         environment: 
+            - CHOKIDAR_USEPOLLING=true
             - NODE_ENV=development
             - MONGO_URI
             - MONGO_LOGIN

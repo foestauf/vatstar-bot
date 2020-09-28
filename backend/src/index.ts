@@ -3,6 +3,7 @@ import 'dotenv/config';
 import morgan from 'morgan';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import { users } from './routes/users';
 
 // DB config
 interface ProcessEnv {
@@ -34,6 +35,8 @@ app.get('/sayHello', (req, res) => {
     }
     res.send('Hello from the back-end.');
 });
+
+app.use('/api/users', users);
 
 app.listen(APP_PORT);
 console.log('Web server listening on port', APP_PORT);

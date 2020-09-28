@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
-    "tsnd": "tsnd src/index.ts",
+    "tsnd": "tsnd --respawn --poll src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
