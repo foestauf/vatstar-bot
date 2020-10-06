@@ -11,6 +11,7 @@ interface ProcessEnv {
 }
 
 const db: string = (process.env.MONGO_URI as string);
+
 mongoose
     .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connection successful'))
@@ -30,7 +31,7 @@ app.use(
 );
 
 app.get('/sayHello', (req, res) => {
-    interface Req extends Request{
+    interface Req extends Request {
         user: String
     }
     res.send('Hello from the back-end.');
