@@ -13,7 +13,8 @@
     "typescript": "^4.0.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.2"
   },
   "scripts": {
     "watch": "tsc -p tsconfig.json -w",

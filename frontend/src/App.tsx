@@ -1,13 +1,12 @@
 import React from 'react';
 import './App.css';
-import { UserList } from './users';
+import { Button } from 'react-bootstrap';
 
 export function App(): JSX.Element {
   return (
     <div className="App">
-      <UserList />
+      <p>Vatstar Discord Control Panel</p>
+      <Button>Login</Button>
     </div>
   );
 }
-
-
