@@ -8,6 +8,7 @@ require("dotenv/config");
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const users_1 = require("./routes/users");
 const db = process.env.MONGO_URI;
 mongoose_1.default
     .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -25,5 +26,6 @@ app.use(express_1.default.urlencoded({
 app.get('/sayHello', (req, res) => {
     res.send('Hello from the back-end.');
 });
+app.use('/users', users_1.users);
 app.listen(APP_PORT);
 console.log('Web server listening on port', APP_PORT);

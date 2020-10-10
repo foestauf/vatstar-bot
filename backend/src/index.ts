@@ -30,7 +30,7 @@ app.use(
     }),
 );
 
-app.get('/sayHello', (req, res) => {
+app.get('/api/sayHello', (req, res) => {
     interface Req extends Request {
         user: String
     }

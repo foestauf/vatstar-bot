@@ -5,3 +5,4 @@
 /.config/
 **/.npm/
 .ash_history
+/nginx/**
