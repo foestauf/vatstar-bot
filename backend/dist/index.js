@@ -23,9 +23,9 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({
     extended: true,
 }));
-app.get('/sayHello', (req, res) => {
+app.get('/api/sayHello', (req, res) => {
     res.send('Hello from the back-end.');
 });
-app.use('/users', users_1.users);
+app.use('/api/users', users_1.users);
 app.listen(APP_PORT);
 console.log('Web server listening on port', APP_PORT);
