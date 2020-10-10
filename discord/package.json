@@ -9,16 +9,18 @@
     "axios": "^0.20.0",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
-    "mongoose": "^5.10.7",
+    "mongoose": "^5.10.6",
     "typescript": "^4.0.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "docker-compose up -d --build",
-    "prod": "docker-compose -f docker-compose.prod.yml up -d"
+    "watch": "tsc -p tsconfig.json -w",
+    "start": "node index.js",
+    "start-dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -29,8 +31,5 @@
   "bugs": {
     "url": "https://github.com/foestauf/vatstar-bot/issues"
   },
-  "homepage": "https://github.com/foestauf/vatstar-bot#readme",
-  "devDependencies": {
-    "prettier": "^2.1.2"
-  }
+  "homepage": "https://github.com/foestauf/vatstar-bot#readme"
 }

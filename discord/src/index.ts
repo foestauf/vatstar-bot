@@ -7,7 +7,6 @@ import { newUser, retrieveUser, updateUser } from "./utils";
 
 const client = new Discord.Client();
 const axios = require("axios").default;
-
 const { prefix, channelId } = require("./config.json");
 
 let lobbyChannel: Channel;
@@ -26,7 +25,6 @@ interface channelName extends Discord.DMChannel {
 client.on('guildMemberAdd', (member: Discord.GuildMember) => {
   newUser(member);
 })
-
 
 client.on("message", async (message: Message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -55,16 +53,16 @@ client.on("message", async (message: Message) => {
     if (message.content === "!ping") {
       console.log(retrieveUser(message.member))
       message.channel.send("Pong!").then(msg => {
-        msg.delete({timeout: 20000})
+        msg.delete({ timeout: 20000 })
       });
     } else if (command === "vatstar" || command === "vatsim") {
       console.log(`User ${message.member} is paging us`);
       if (!args.length) {
-        message.delete({timeout: 30000})
+        message.delete({ timeout: 30000 })
         return message.reply(
           `Please respond in the format of "!vatstar 1234567" with your VATSIM ID`
         ).then(msg => {
-          msg.delete({timeout: 30000})
+          msg.delete({ timeout: 30000 })
         });
       }
       console.log(`Command name: ${command}\nArguments: ${args}`);
@@ -96,7 +94,8 @@ client.on("message", async (message: Message) => {
             //   );
             // };
             // message.reply(
-            //   `I have found ${full_name}, is that right? Please react to your original message with either 👍 for yes or 👎 for no.`
+            //   `I have found ${full_name}, is that right? Please react
+            // to your original message with either 👍 for yes or 👎 for no.`
             // );
 
             // message
@@ -110,20 +109,19 @@ client.on("message", async (message: Message) => {
               nameReply = `Hello ${full_name}, I will adjust your nickname`;
               message.member
                 .setNickname(full_name)
-                .then((res: any) => {})
+                .then((res: any) => { })
                 .catch((err: any) => {
                   if (err.httpStatus === 403) {
                     message.reply(
                       "I do not have permission to adjust your nickname"
                     )
-                    .then(msg => {
-                      msg.delete({timeout: 20000})
-                    });
+                      .then(msg => {
+                        msg.delete({ timeout: 20000 })
+                      });
                   }
                   console.log(`Unable to adjust nickname for ${full_name}`);
                 });
             }
-
             let newRoles = roleSelector(message, pilotRating, rating);
             const member = message.mentions.members.first();
             let rolesString = newRoles.roleNames.join(", ");
@@ -148,19 +146,19 @@ client.on("message", async (message: Message) => {
               .filter(Boolean)
               .join(". ");
             message.reply(replyMessage)
-            .then(async msg => {
+              .then(async msg => {
                 if ((await retrieveUser(message.member)).isNewUser) {
-                const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'emoji1');
+                  const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'emoji1');
                   // @ts-expect-error
                   client.channels.cache.get(lobbyChannel.id).send(
                     `Hey <@${message.member.id}>, welcome to **VATSTAR Virtual Pilot Training** ${emoji1} If you have any questions do not hesitate to ask :tada::hugging:.`
-                    );
+                  );
                   updateUser(message.member, id, "clearNewUser");
-                  
+
                 }
-              msg.delete({timeout: 60000}).catch((error) => console.log(error))
-            });
-            message.delete({timeout: 60000}).catch((error) => console.log(error))
+                msg.delete({ timeout: 60000 }).catch((error) => console.log(error))
+              });
+            message.delete({ timeout: 60000 }).catch((error) => console.log(error))
             // } else {
             //   message.reply('Okay we got that wrong, please check your vatsim ID number  and try again or contact staff for further assistance');
             // }
@@ -175,17 +173,17 @@ client.on("message", async (message: Message) => {
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
-          message.delete({ timeout: 60000}).catch((error) => console.log(error))
+          message.delete({ timeout: 60000 }).catch((error) => console.log(error))
           message.reply(`VATSIM ID "${args[0]}" not found. If you are certain you have typed your CID correctly this could mean that you have not completed the new member orientation course "P0" and therefore are unable to authenticate on the VATSIM network to include this discord server.`)
-          .then(msg => {
-            msg.delete({ timeout: 60000})
-          });
+            .then(msg => {
+              msg.delete({ timeout: 60000 })
+            });
         } else {
           console.log(error);
           message.reply(
             "An unknown error has occurred please contact @Foestauf#4056"
           ).then(msg => {
-            msg.delete({timeout: 30000})
+            msg.delete({ timeout: 30000 })
           });
         }
       }

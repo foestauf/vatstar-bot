@@ -1,0 +1,60 @@
+version: '3'
+services:
+    database:
+        image: 'mongo'
+        container_name: 'database'
+        restart: 'unless-stopped'
+        environment: 
+            - MONGO_INITDB_DATABASE=vatstar
+            - MONGO_INITDB_ROOT_USERNAME=mongodb
+            - MONGO_INITDB_ROOT_PASSWORD=mongodb
+        volumes: 
+            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+            - ./mongo-volume:/data/db
+        ports:
+            - '127.0.0.1:27017-27019:27017-27019'
+ 
+    watchtower:
+        image: containrrr/watchtower
+        volumes: 
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ~/.docker/config.json:/config.json
+        command: --interval 30
+    vatstar:
+        image: index.docker.io/foestauf/vatstar:discord
+        restart: 'unless-stopped'
+
+        environment: 
+            - TOKEN
+        depends_on: 
+            - database
+    frontend:
+         image: index.docker.io/foestauf/vatstar:web
+         container_name: frontend
+         restart: 'unless-stopped'
+         tty: true
+         ports: 
+            - "3000:80"
+
+    nginx:
+        image: nginx:alpine
+        container_name: production_nginx
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+            - ./nginx/error.log:/var/log/nginx
+            - ./nginx/cache/:/etc/nginx/cache
+            - /etc/letsencrypt/:/etc/letsencrypt/
+        ports:
+            - 80:80
+            - 443:443
+
+    backend:
+        image: index.docker.io/foestauf/vatstar:api
+        container_name: backend
+        restart: 'unless-stopped'
+        environment: 
+            - MONGO_URI
+            - MONGO_LOGIN
+            - MONGO_PASSWORD
+        ports:  
+            - "4000:4000"

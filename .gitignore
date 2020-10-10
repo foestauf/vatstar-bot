@@ -1,7 +1,8 @@
-/node_modules/
+**/node_modules/
 /mongo-volume/
 .env
 /.vscode/
 /.config/
-/.npm/
+**/.npm/
 .ash_history
+/nginx/**

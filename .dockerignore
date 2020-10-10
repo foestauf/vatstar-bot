@@ -1,10 +1,10 @@
-/node_modules/
+**/node_modules/
 .env
 .git
 /.vscode/
 /mongo-volume/
 /.github/
 /.config/
-/.npm/
+**/.npm/
 .ash_history
 
