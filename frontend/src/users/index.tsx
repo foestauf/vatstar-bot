@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { RSA_PSS_SALTLEN_DIGEST } from 'constants';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { Table } from 'react-bootstrap';
 
@@ -50,10 +51,14 @@ export const UserList: FunctionComponent = () => {
         <tbody>
           {userList.map((value: UserValue) => {
             const { pilotRating } = value;
-            const ratings = Object.keys(pilotRating).map((rating) => {
-              return <li>{rating}</li>;
-            });
-
+            let ratings;
+            if (pilotRating !== undefined) {
+              ratings = Object.keys(pilotRating).map((rating) => {
+                return <li>{rating}</li>;
+              });
+            } else {
+              ratings = <ul />;
+            }
             return (
               <tr key={value._id}>
                 <td>{value.vatsimId}</td>
