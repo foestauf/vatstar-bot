@@ -16,7 +16,14 @@ const userSchema = new mongoose.Schema({
     vatsimId: { type: String },
     createdAt: { type: Date, default: Date.now },
     isNewUser: { type: Boolean, default: true },
-    lastSeen: { type: Date, default: Date.now }
+    lastSeen: { type: Date, default: Date.now },
+    pilotRating: {
+        p0: { type: Boolean, default: false },
+        p1: { type: Boolean, default: false },
+        p2: { type: Boolean, default: false },
+        p3: { type: Boolean, default: false },
+        p4: { type: Boolean, default: false },
+    }
 });
 
 const db = mongoose.connection;
@@ -44,7 +51,15 @@ interface UserSchema {
     createdAt: Date,
     isNewUser: Boolean,
     lastSeen: Date,
-    _id: Object
+    _id: Object,
+    pilotRating: {
+      p0: boolean;
+      p1: boolean;
+      p2: boolean;
+      p3: boolean;
+      p4: boolean;
+    };
+
 }
 
 export async function retrieveUser(member: GuildMember): Promise<UserSchema> {

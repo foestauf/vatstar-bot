@@ -16,7 +16,14 @@ const userSchema = new mongoose.Schema({
     vatsimId: { type: String },
     createdAt: { type: Date, default: Date.now },
     isNewUser: { type: Boolean, default: true },
-    lastSeen: { type: Date, default: Date.now }
+    lastSeen: { type: Date, default: Date.now },
+    pilotRating: {
+        p0: { type: Boolean, default: false },
+        p1: { type: Boolean, default: false },
+        p2: { type: Boolean, default: false },
+        p3: { type: Boolean, default: false },
+        p4: { type: Boolean, default: false },
+    }
 });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
