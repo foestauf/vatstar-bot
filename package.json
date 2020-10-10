@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/foestauf/vatstar-bot/issues"
   },
-  "homepage": "https://github.com/foestauf/vatstar-bot#readme"
+  "homepage": "https://github.com/foestauf/vatstar-bot#readme",
+  "devDependencies": {
+    "prettier": "^2.1.2"
+  }
 }

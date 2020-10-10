@@ -9,8 +9,7 @@ ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  // eslint-disable-next-line unicorn/prefer-query-selector
-  document.getElementById('root')
+  document.querySelector('#root')
 );
 
 // If you want your app to work offline and load faster, you can change

@@ -8,7 +8,14 @@ const UserSchema = new Schema({
     userId: String,
     createdAt: Date,
     lastSeen: Date,
-    vatsimId: String
+    vatsimId: String,
+    pilotRating: {
+        p0: Boolean,
+        p1: Boolean,
+        p2: Boolean,
+        p3: Boolean,
+        p4: Boolean
+    }
 })
 
 export const User = mongoose.model('users', UserSchema);
