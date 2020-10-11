@@ -56,6 +56,7 @@ async function retrieveUser(member) {
 }
 exports.retrieveUser = retrieveUser;
 function updateUser(member, data, action) {
+    console.log(`Updating member: ${member.id}`);
     const query = { userId: member.id };
     const pilotRating = {
         p0: false,
@@ -97,7 +98,7 @@ function updateUser(member, data, action) {
                     isNewUser: false,
                     vatsimId: data.id,
                     pilotRating,
-                    lastSeen: Date.now,
+                    lastSeen: new Date(),
                 },
             }, { new: true }, (err) => {
                 if (err)
@@ -107,10 +108,13 @@ function updateUser(member, data, action) {
         case 'updateUser':
             User.findOneAndUpdate(query, {
                 $set: {
-                    lastSeen: Date.now,
+                    lastSeen: new Date(),
                     pilotRating,
                     vatsimId: data.id,
                 },
+            }, { new: true }, (err) => {
+                if (err)
+                    console.log(err);
             });
             break;
         default:

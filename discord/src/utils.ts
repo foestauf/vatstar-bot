@@ -80,6 +80,7 @@ export async function retrieveUser(member: GuildMember): Promise<UserSchema> {
 }
 
 export function updateUser(member: GuildMember, data, action: String) {
+  console.log(`Updating member: ${member.id}`);
   const query = { userId: member.id };
   const pilotRating = {
     p0: false,
@@ -123,7 +124,7 @@ export function updateUser(member: GuildMember, data, action: String) {
             isNewUser: false,
             vatsimId: data.id,
             pilotRating,
-            lastSeen: Date.now,
+            lastSeen: new Date(),
           },
         }, { new: true }, (err) => {
           if (err) console.log(err);
@@ -133,10 +134,12 @@ export function updateUser(member: GuildMember, data, action: String) {
       User.findOneAndUpdate(query,
         {
           $set: {
-            lastSeen: Date.now,
+            lastSeen: new Date(),
             pilotRating,
             vatsimId: data.id,
           },
+        }, { new: true }, (err) => {
+          if (err) console.log(err);
         });
 
       break;
