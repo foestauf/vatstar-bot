@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   vatsimId: { type: String },
   createdAt: { type: Date, default: Date.now },
   isNewUser: { type: Boolean, default: true },
+  discordTag: String,
   lastSeen: { type: Date, default: Date.now },
   pilotRating: {
     p0: { type: Boolean, default: false },
@@ -42,7 +43,9 @@ export function newUser(member: GuildMember) {
   const user = new User({
     userId: member.id,
     name: member.displayName,
+    discordTag: member.user.tag,
   });
+  // eslint-disable-next-line consistent-return
   user.save((err, user) => {
     // eslint-disable-next-line no-console
     if (err) return console.log(err);
@@ -58,6 +61,7 @@ interface UserSchema {
     isNewUser: Boolean,
     lastSeen: Date,
     _id: Object,
+    discordTag: String,
     pilotRating: {
       p0: boolean;
       p1: boolean;

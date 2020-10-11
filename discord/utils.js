@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     vatsimId: { type: String },
     createdAt: { type: Date, default: Date.now },
     isNewUser: { type: Boolean, default: true },
+    discordTag: String,
     lastSeen: { type: Date, default: Date.now },
     pilotRating: {
         p0: { type: Boolean, default: false },
@@ -35,6 +36,7 @@ function newUser(member) {
     const user = new User({
         userId: member.id,
         name: member.displayName,
+        discordTag: member.user.tag,
     });
     user.save((err, user) => {
         if (err)

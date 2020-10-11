@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import { Message } from 'discord.js';
 import { Roles } from './types';
 import { findRoles } from './roleSymbols';
