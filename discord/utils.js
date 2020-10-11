@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUser = exports.retrieveUser = exports.newUser = void 0;
 const mongoose = require("mongoose");
 mongoose.connect('mongodb://database/vatstar', {
-    user: "mongodb",
-    pass: "mongodb",
+    user: 'mongodb',
+    pass: 'mongodb',
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
-    useCreateIndex: true
+    useCreateIndex: true,
 });
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         p2: { type: Boolean, default: false },
         p3: { type: Boolean, default: false },
         p4: { type: Boolean, default: false },
-    }
+    },
 });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -34,7 +34,7 @@ const User = mongoose.model('User', userSchema);
 function newUser(member) {
     const user = new User({
         userId: member.id,
-        name: member.displayName
+        name: member.displayName,
     });
     user.save((err, user) => {
         if (err)
@@ -46,7 +46,7 @@ exports.newUser = newUser;
 async function retrieveUser(member) {
     let userDoc;
     await User.findOne({ userId: member.id }, (err, res) => {
-        console.log('Server response: ' + res);
+        console.log(`Server response: ${res}`);
         if (err)
             console.log(err);
         userDoc = res;
@@ -55,19 +55,62 @@ async function retrieveUser(member) {
     return userDoc;
 }
 exports.retrieveUser = retrieveUser;
-function updateUser(member, cid, action) {
-    let query = { userId: member.id };
+function updateUser(member, data, action) {
+    const query = { userId: member.id };
+    const pilotRating = {
+        p0: false,
+        p1: false,
+        p2: false,
+        p3: false,
+        p4: false,
+    };
+    if (data.pilotrating === 0) {
+        pilotRating.p0 = true;
+    }
+    if (data.pilotrating === 1) {
+        pilotRating.p0 = true;
+        pilotRating.p1 = true;
+    }
+    if (data.pilotrating === 3) {
+        pilotRating.p0 = true;
+        pilotRating.p1 = true;
+        pilotRating.p2 = true;
+    }
+    if (data.pilotrating === 7) {
+        pilotRating.p0 = true;
+        pilotRating.p1 = true;
+        pilotRating.p2 = true;
+        pilotRating.p3 = true;
+    }
+    if (data.pilotrating === 15) {
+        pilotRating.p0 = true;
+        pilotRating.p1 = true;
+        pilotRating.p2 = true;
+        pilotRating.p3 = true;
+        pilotRating.p4 = true;
+    }
     switch (action) {
-        case "clearNewUser":
+        case 'clearNewUser':
             User.findOneAndUpdate(query, {
-                "$set": {
+                $set: {
                     name: member.nickname,
                     isNewUser: false,
-                    vatsimId: cid
-                }
+                    vatsimId: data.id,
+                    pilotRating,
+                    lastSeen: Date.now,
+                },
             }, { new: true }, (err) => {
                 if (err)
                     console.log(err);
+            });
+            break;
+        case 'updateUser':
+            User.findOneAndUpdate(query, {
+                $set: {
+                    lastSeen: Date.now,
+                    pilotRating,
+                    vatsimId: data.id,
+                },
             });
             break;
         default:

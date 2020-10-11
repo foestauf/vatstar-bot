@@ -4,8 +4,6 @@
   "description": "VATSTAR bot",
   "main": "vatstar.js",
   "dependencies": {
-    "@types/mongoose": "^5.7.36",
-    "@types/node": "^14.11.2",
     "axios": "^0.20.0",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
@@ -13,6 +11,14 @@
     "typescript": "^4.0.3"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "^14.11.2",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2"
   },
@@ -26,7 +32,7 @@
     "type": "git",
     "url": "git+https://github.com/foestauf/vatstar-bot.git"
   },
-  "author": "",
+  "author": "Rob McKee",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/foestauf/vatstar-bot/issues"
