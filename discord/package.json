@@ -4,10 +4,15 @@
   "description": "VATSTAR bot",
   "main": "vatstar.js",
   "dependencies": {
+
+
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "^14.11.8",
+
     "axios": "^0.20.0",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
-    "mongoose": "^5.10.6",
+    "mongoose": "^5.10.9",
     "typescript": "^4.0.3"
   },
   "devDependencies": {
