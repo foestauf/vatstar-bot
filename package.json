@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "description": "VATSTAR bot",
   "main": "vatstar.js",
+
   "dependencies": {
     "@types/mongoose": "^5.7.36",
-    "@types/node": "^14.11.2",
+    "@types/node": "^14.11.8",
     "axios": "^0.20.0",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
-    "mongoose": "^5.10.7",
+    "mongoose": "^5.10.9",
     "typescript": "^4.0.3"
   },
+
   "devDependencies": {
     "nodemon": "^2.0.4"
   },
@@ -29,8 +31,5 @@
   "bugs": {
     "url": "https://github.com/foestauf/vatstar-bot/issues"
   },
-  "homepage": "https://github.com/foestauf/vatstar-bot#readme",
-  "devDependencies": {
-    "prettier": "^2.1.2"
-  }
+  "homepage": "https://github.com/foestauf/vatstar-bot#readme"
 }

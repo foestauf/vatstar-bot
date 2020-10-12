@@ -2,98 +2,97 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.roleSelector = void 0;
 const roleSymbols_1 = require("./roleSymbols");
+const checkForExistingRole = (message, roleName) => {
+    if (message.member.roles.cache.find((role) => role.name === roleName)) {
+        return true;
+    }
+    return false;
+};
 function roleSelector(message, pilotRating, rating) {
-    let roles = [];
-    let roleNames = [];
+    const roles = [];
+    const roleNames = [];
     const roleSymbol = roleSymbols_1.findRoles(message);
     if (pilotRating === 0) {
-        if (!checkForExistingRole(message, "P0")) {
+        if (!checkForExistingRole(message, 'P0')) {
             roles.push(roleSymbol.p0);
             roleNames.push(roleSymbol.p0.name);
         }
     }
     if (pilotRating === 1) {
-        if (!checkForExistingRole(message, "P0")) {
+        if (!checkForExistingRole(message, 'P0')) {
             roles.push(roleSymbol.p0);
             roleNames.push(roleSymbol.p0.name);
         }
-        if (!checkForExistingRole(message, "P1")) {
+        if (!checkForExistingRole(message, 'P1')) {
             roles.push(roleSymbol.p1);
             roleNames.push(roleSymbol.p1.name);
         }
     }
     if (pilotRating === 3) {
-        if (!checkForExistingRole(message, "P0")) {
+        if (!checkForExistingRole(message, 'P0')) {
             roles.push(roleSymbol.p0);
             roleNames.push(roleSymbol.p0.name);
         }
-        if (!checkForExistingRole(message, "P1")) {
+        if (!checkForExistingRole(message, 'P1')) {
             roles.push(roleSymbol.p1);
             roleNames.push(roleSymbol.p1.name);
         }
-        if (!checkForExistingRole(message, "P2")) {
+        if (!checkForExistingRole(message, 'P2')) {
             roles.push(roleSymbol.p2);
             roleNames.push(roleSymbol.p2.name);
         }
     }
     if (pilotRating === 7) {
-        if (!checkForExistingRole(message, "P0")) {
+        if (!checkForExistingRole(message, 'P0')) {
             roles.push(roleSymbol.p0);
             roleNames.push(roleSymbol.p0.name);
         }
-        if (!checkForExistingRole(message, "P1")) {
+        if (!checkForExistingRole(message, 'P1')) {
             roles.push(roleSymbol.p1);
             roleNames.push(roleSymbol.p1.name);
         }
-        if (!checkForExistingRole(message, "P2")) {
+        if (!checkForExistingRole(message, 'P2')) {
             roles.push(roleSymbol.p2);
             roleNames.push(roleSymbol.p2.name);
         }
-        if (!checkForExistingRole(message, "P3")) {
+        if (!checkForExistingRole(message, 'P3')) {
             roles.push(roleSymbol.p3);
             roleNames.push(roleSymbol.p3.name);
         }
     }
     if (pilotRating === 15) {
-        if (!checkForExistingRole(message, "P0")) {
+        if (!checkForExistingRole(message, 'P0')) {
             roles.push(roleSymbol.p0);
             roleNames.push(roleSymbol.p0.name);
         }
-        if (!checkForExistingRole(message, "P1")) {
+        if (!checkForExistingRole(message, 'P1')) {
             roles.push(roleSymbol.p1);
             roleNames.push(roleSymbol.p1.name);
         }
-        if (!checkForExistingRole(message, "P2")) {
+        if (!checkForExistingRole(message, 'P2')) {
             roles.push(roleSymbol.p2);
             roleNames.push(roleSymbol.p2.name);
         }
-        if (!checkForExistingRole(message, "P3")) {
+        if (!checkForExistingRole(message, 'P3')) {
             roles.push(roleSymbol.p3);
             roleNames.push(roleSymbol.p3.name);
         }
-        if (!checkForExistingRole(message, "P4")) {
+        if (!checkForExistingRole(message, 'P4')) {
             roles.push(roleSymbol.p4);
             roleNames.push(roleSymbol.p4.name);
         }
     }
     if (rating > 1) {
-        if (!checkForExistingRole(message, "Controller")) {
+        if (!checkForExistingRole(message, 'Controller')) {
             roles.push(roleSymbol.controller);
             roleNames.push(roleSymbol.controller.name);
         }
     }
-    if (!checkForExistingRole(message, "Member")) {
+    if (!checkForExistingRole(message, 'Member')) {
         roles.push(roleSymbol.memberRole);
         roleNames.push(roleSymbol.memberRole.name);
     }
     return { roles, roleNames };
 }
 exports.roleSelector = roleSelector;
-const checkForExistingRole = (message, roleName) => {
-    if (message.member.roles.cache.find((role) => role.name === roleName)) {
-        return true;
-    }
-    else
-        return false;
-};
 //# sourceMappingURL=roleSelector.js.map
