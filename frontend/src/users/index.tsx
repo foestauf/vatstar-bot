@@ -1,7 +1,9 @@
 import axios from 'axios';
-import { RSA_PSS_SALTLEN_DIGEST } from 'constants';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { Table } from 'react-bootstrap';
+// Using require statement until I can resolve type errors as an import
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const lodash = require('lodash');
 
 export const UserList: FunctionComponent = () => {
   const [userList, setUserList] = useState([]);
@@ -53,9 +55,11 @@ export const UserList: FunctionComponent = () => {
             const { pilotRating } = value;
             let ratings;
             if (pilotRating !== undefined) {
-              ratings = Object.keys(pilotRating).map((rating) => {
-                return <li>{rating}</li>;
-              });
+              ratings = Object.keys(lodash.pickBy(pilotRating)).map(
+                (rating) => {
+                  return <li>{rating}</li>;
+                }
+              );
             } else {
               ratings = <ul />;
             }
