@@ -16,14 +16,15 @@ services:
  
     watchtower:
         image: containrrr/watchtower
+        container_name: 'watchtower'
         volumes: 
             - /var/run/docker.sock:/var/run/docker.sock
             - ~/.docker/config.json:/config.json
         command: --interval 30
     vatstar:
         image: index.docker.io/foestauf/vatstar:discord
+        container_name: 'discord'
         restart: 'unless-stopped'
-
         environment: 
             - TOKEN
         depends_on: 
@@ -40,7 +41,7 @@ services:
 
     nginx:
         image: nginx:alpine
-        container_name: production_nginx
+        container_name: 'nginx'
         restart: 'unless-stopped'
         depends_on: 
             - frontend
@@ -56,7 +57,7 @@ services:
 
     backend:
         image: index.docker.io/foestauf/vatstar:api
-        container_name: backend
+        container_name: 'backend'
         restart: 'unless-stopped'
         depends_on: 
             - database

@@ -17,6 +17,8 @@
     "prettier": "^2.1.2"
   },
   "scripts": {
+    "build": "tsc && docker build -t foestauf/vatstar:discord .",
+    "docker-push": "docker push foestauf/vatstar:discord",
     "watch": "tsc -p tsconfig.json -w",
     "start": "node index.js",
     "start-dev": "nodemon index.js",
