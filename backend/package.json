@@ -22,7 +22,7 @@
     "eslint": "^7.10.0",
     "nodemon": "^2.0.5",
     "prettier": "^2.1.2",
-    "ts-node-dev": "^1.0.0-pre.63"
+    "ts-node-dev": "^1.0.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
