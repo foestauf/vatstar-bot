@@ -2,7 +2,7 @@
 /* eslint-disable import/extensions */
 import { Message } from 'discord.js';
 import { Roles } from './types';
-import { findRoles } from './roleSymbols';
+import { findRoles } from './findRoles';
 // eslint-disable-next-line import/order
 import Discord = require('discord.js');
 

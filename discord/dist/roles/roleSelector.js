@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.roleSelector = void 0;
-const roleSymbols_1 = require("./roleSymbols");
+const findRoles_1 = require("./findRoles");
 const checkForExistingRole = (message, roleName) => {
     if (message.member.roles.cache.find((role) => role.name === roleName)) {
         return true;
@@ -11,7 +11,7 @@ const checkForExistingRole = (message, roleName) => {
 function roleSelector(message, pilotRating, rating) {
     const roles = [];
     const roleNames = [];
-    const roleSymbol = roleSymbols_1.findRoles(message);
+    const roleSymbol = findRoles_1.findRoles(message);
     if (pilotRating === 0) {
         if (!checkForExistingRole(message, 'P0')) {
             roles.push(roleSymbol.p0);

@@ -22,14 +22,15 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "nodemon": "^2.0.4",
-    "prettier": "^2.1.2"
+    "prettier": "^2.1.2",
+    "ts-node-dev": "^1.0.0"
   },
   "scripts": {
     "build": "tsc && docker build -t foestauf/vatstar:discord .",
     "docker-push": "docker push foestauf/vatstar:discord",
     "watch": "tsc -p tsconfig.json -w",
-    "start": "node index.js",
-    "start-dev": "nodemon index.js",
+    "start": "node ./dist/index.js",
+    "start-dev": "tsnd --respawn ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

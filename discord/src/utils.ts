@@ -54,6 +54,7 @@ export function newUser(member: GuildMember) {
   });
 }
 
+
 interface UserSchema {
     name: String,
     userId: String,

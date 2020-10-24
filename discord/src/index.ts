@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const client = new Discord.Client();
 const axios = require('axios').default;
-const { prefix, channelId } = require('./config.json');
+const { prefix, channelId } = require('../config.json');
 
 let lobbyChannel: Channel;
 
@@ -86,6 +86,7 @@ client.on('message', async (message: Message) => {
                 'I do not have permission to adjust nicknames',
               );
             }
+
 
             // Start await reactions here
             // message.react("👍").then(() => message.react("👎"));
