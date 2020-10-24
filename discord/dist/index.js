@@ -28,7 +28,7 @@ client.on('message', async (message) => {
                 msg.delete({ timeout: 20000 });
             });
         }
-        else if (command === 'vatstar' || command === 'vatsim') {
+        if (command === 'vatstar' || command === 'vatsim') {
             console.log(`User ${message.member} is paging us`);
             if (!args.length) {
                 message.delete({ timeout: 30000 });
@@ -119,4 +119,3 @@ client.on('message', async (message) => {
     }
 });
 client.login(process.env.TOKEN);
-//# sourceMappingURL=index.js.map

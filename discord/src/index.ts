@@ -55,7 +55,8 @@ client.on('message', async (message: Message) => {
       message.channel.send('Pong!').then((msg) => {
         msg.delete({ timeout: 20000 });
       });
-    } else if (command === 'vatstar' || command === 'vatsim') {
+    }
+    if (command === 'vatstar' || command === 'vatsim') {
       console.log(`User ${message.member} is paging us`);
       if (!args.length) {
         message.delete({ timeout: 30000 });
@@ -107,6 +108,18 @@ client.on('message', async (message: Message) => {
             //     const reaction = collected.first();
 
             //     if (reaction.emoji.name === "👍") {
+                          // } else {
+            //   message.reply('Okay we got that wrong, please check your vatsim ID number
+            //  and try again or contact staff for further assistance');
+            // }
+            // })
+            // .catch((collected) => {
+            //   message.reply(
+            //     "you reacted with neither a thumbs up, nor a thumbs down."
+            //   );
+            // });
+            // END reaction await
+
             let nameReply: string;
             if (message.member.displayName !== full_name) {
               nameReply = `Hello ${full_name}, I will adjust your nickname`;
@@ -165,17 +178,6 @@ client.on('message', async (message: Message) => {
                 msg.delete({ timeout: 60000 }).catch((error) => console.log(error));
               });
             message.delete({ timeout: 60000 }).catch((error) => console.log(error));
-            // } else {
-            //   message.reply('Okay we got that wrong, please check your vatsim ID number
-            //  and try again or contact staff for further assistance');
-            // }
-            // })
-            // .catch((collected) => {
-            //   message.reply(
-            //     "you reacted with neither a thumbs up, nor a thumbs down."
-            //   );
-            // });
-            // END reaction await
           });
       } catch (error) {
         console.log(error);

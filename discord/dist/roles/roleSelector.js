@@ -95,4 +95,3 @@ function roleSelector(message, pilotRating, rating) {
     return { roles, roleNames };
 }
 exports.roleSelector = roleSelector;
-//# sourceMappingURL=roleSelector.js.map

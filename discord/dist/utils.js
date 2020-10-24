@@ -124,4 +124,3 @@ function updateUser(member, data, action) {
     }
 }
 exports.updateUser = updateUser;
-//# sourceMappingURL=utils.js.map

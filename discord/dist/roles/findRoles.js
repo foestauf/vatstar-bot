@@ -11,4 +11,3 @@ exports.findRoles = (message) => {
     let memberRole = message.member.guild.roles.cache.find((role) => role.name === "Member");
     return { p0, p1, p2, p3, p4, controller, memberRole };
 };
-//# sourceMappingURL=findRoles.js.map
