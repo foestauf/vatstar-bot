@@ -1,13 +1,12 @@
-import axios from 'axios';
-import React, { useEffect, useState, FunctionComponent } from 'react';
+import axios, { AxiosResponse } from 'axios';
+import React, { FunctionComponent } from 'react';
 import { Table } from 'react-bootstrap';
+import { useQuery } from 'react-query';
 // Using require statement until I can resolve type errors as an import
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const lodash = require('lodash');
 
 export const UserList: FunctionComponent = () => {
-  const [userList, setUserList] = useState([]);
-  const uri = '/api/users';
   interface UserValue {
     _id: number;
     name: string;
@@ -24,20 +23,14 @@ export const UserList: FunctionComponent = () => {
       p4: boolean;
     };
   }
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const fetchUsers = async (): Promise<AxiosResponse> => {
+    return axios.get('/api/users', {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  };
 
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      await axios
-        .get(uri, { headers: { 'Content-Type': 'application/json' } })
-        .then((res) => {
-          setUserList(res.data);
-          return undefined;
-        })
-        // eslint-disable-next-line no-console
-        .catch((error) => console.log(error.response));
-    };
-    fetchData();
-  }, []);
+  const { isLoading, isError, data, error } = useQuery('users', fetchUsers);
 
   return (
     <div>
@@ -51,28 +44,32 @@ export const UserList: FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {userList.map((value: UserValue) => {
-            const { pilotRating } = value;
-            let ratings;
-            if (pilotRating !== undefined) {
-              ratings = Object.keys(lodash.pickBy(pilotRating)).map(
-                (rating) => {
-                  return <li>{rating}</li>;
-                }
-              );
-            } else {
-              ratings = <ul />;
-            }
-            return (
-              <tr key={value._id}>
-                <td>{value.vatsimId}</td>
-                <td>{value.name}</td>
-                <td>{ratings}</td>
+          {isLoading ? (
+            <div>Loading</div>
+          ) : (
+            data?.data.map((value: UserValue) => {
+              const { pilotRating } = value;
+              let ratings;
+              if (pilotRating !== undefined) {
+                ratings = Object.keys(lodash.pickBy(pilotRating)).map(
+                  (rating) => {
+                    return <li>{rating}</li>;
+                  }
+                );
+              } else {
+                ratings = <ul />;
+              }
+              return (
+                <tr key={value._id}>
+                  <td>{value.vatsimId}</td>
+                  <td>{value.name}</td>
+                  <td>{ratings}</td>
 
-                <td>{value.lastSeen}</td>
-              </tr>
-            );
-          })}
+                  <td>{value.lastSeen}</td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </Table>
     </div>

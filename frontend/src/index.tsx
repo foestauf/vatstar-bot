@@ -2,12 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ReactQueryDevtools } from 'react-query-devtools';
 import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
+    <ReactQueryDevtools initialIsOpen />
   </React.StrictMode>,
   document.querySelector('#root')
 );
