@@ -42,7 +42,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.162",
+    "@types/lodash": "^4.14.165",
     "@types/node": "^14.11.2",
     "@types/react-router": "^5.1.8",
     "@types/react-router-bootstrap": "^0.24.5",
