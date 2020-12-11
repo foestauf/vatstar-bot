@@ -20,7 +20,7 @@ services:
         volumes: 
             - /var/run/docker.sock:/var/run/docker.sock
             - ~/.docker/config.json:/config.json
-        command: --interval 30
+        command: --interval 1800
     vatstar:
         image: index.docker.io/foestauf/vatstar:discord
         container_name: 'discord'
