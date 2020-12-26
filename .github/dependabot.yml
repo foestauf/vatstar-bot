@@ -11,15 +11,19 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    target-branch: "dev"
   - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "weekly"
+    target-branch: "dev"
   - package-ecosystem: "npm"
     directory: "/discord"
     schedule:
       interval: "weekly"
+    target-branch: "dev"
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
+    target-branch: "dev"
