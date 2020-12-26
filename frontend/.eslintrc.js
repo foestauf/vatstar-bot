@@ -61,6 +61,7 @@ module.exports = {
     // Common abbreviations are known and readable
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/filename-case': 'off',
+    'unicorn/prefer-ternary': 'off',
     'unicorn/no-useless-undefined': 'off',
     'no-underscore-dangle': [1, { allow: ['_id'] }],
     'prettier/prettier': 2
