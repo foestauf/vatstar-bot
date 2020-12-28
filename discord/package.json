@@ -22,7 +22,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "nodemon": "^2.0.6",
-    "prettier": "^2.1.2"
+    "prettier": "^2.2.1"
   },
   "scripts": {
     "build": "tsc && docker build -t foestauf/vatstar:discord .",
